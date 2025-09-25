@@ -94,17 +94,19 @@ body{
   font-size:16px;
   width:180px;
   background:linear-gradient(to bottom, 
-    #5DD5CE 0%, 
-    #4ECDC4 15%, 
-    #3FB8B1 85%, 
-    #2EA19A 100%); 
-  color:#2C5F5D; 
+    #FFB6E8 0%, 
+    #FF9FDD 15%, 
+    #FF88D0 85%, 
+    #FF6BB8 100%);
+  border: 2px solid rgba(255,255,255,0.4);
+  color:#A8326B; 
   cursor:pointer; 
-  box-shadow:0 2px 0 #37A99E,
-             0 4px 0 #2B9087,
-             0 6px 0 #237B72,
-             0 8px 0 #1B665D,
-             0 12px 20px rgba(0,0,0,0.3); 
+  box-shadow:0 2px 0 #E55AAD,
+             0 4px 0 #D44A9C,
+             0 6px 0 #C23A8B,
+             0 8px 0 #B12A7A,
+             0 12px 25px rgba(255,105,180,0.3),
+             inset 0 1px 0 rgba(255,255,255,0.6); 
   transition:all .1s ease;
   position:relative;
   text-shadow:0 1px 0 rgba(255,255,255,0.4);
@@ -112,19 +114,21 @@ body{
 }
 .controls button:hover{ 
   transform:translateY(-2px);
-  box-shadow:0 4px 0 #37A99E,
-             0 6px 0 #2B9087,
-             0 8px 0 #237B72,
-             0 10px 0 #1B665D,
-             0 14px 22px rgba(0,0,0,0.4);
+  box-shadow:0 4px 0 #E55AAD,
+             0 6px 0 #D44A9C,
+             0 8px 0 #C23A8B,
+             0 10px 0 #B12A7A,
+             0 16px 30px rgba(255,105,180,0.4),
+             inset 0 1px 0 rgba(255,255,255,0.8);
 }
 .controls button:active{ 
   transform:translateY(4px);
-  box-shadow:0 1px 0 #37A99E,
-             0 2px 0 #2B9087,
-             0 3px 0 #237B72,
-             0 4px 0 #1B665D,
-             0 6px 10px rgba(0,0,0,0.2);
+  box-shadow:0 1px 0 #E55AAD,
+             0 2px 0 #D44A9C,
+             0 3px 0 #C23A8B,
+             0 4px 0 #B12A7A,
+             0 8px 15px rgba(255,105,180,0.2),
+             inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .controls .secondary{ background:transparent; border:1px dashed rgba(255,255,255,.22) }
 
@@ -136,6 +140,16 @@ body{
 
 /* Utils */
 .hidden{ display:none !important }
+
+
+/* Enhanced banner with better text styling */
+.banner h1 {
+  background: linear-gradient(45deg, #FF69B4, #FFB6C1, #DDA0DD);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(2px 2px 4px rgba(255,105,180,0.3));
+}
 
 /* Start overlay (not used) */
 

@@ -189,6 +189,7 @@
   reset();
   updateActionLabel();
   
+  
   // Auto-play music on page load
   let musicPlaying = false;
   
