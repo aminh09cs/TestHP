@@ -71,6 +71,7 @@ body{
 .cake3d-container{ width:100%; height:100%; position:relative; }
 .cake3d-container canvas{ border:none; border-radius:0; box-shadow:none; width:100% !important; height:100% !important; }
 
+
 /* Smoke for blow candle */
 .smoke{ position:absolute; bottom:190px; left:50%; width:2px; height:2px; transform:translateX(-50%); pointer-events:none }
 .cake.blow .flame{ opacity:0 }
