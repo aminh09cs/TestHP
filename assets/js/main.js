@@ -46,7 +46,6 @@
   const bgm = document.getElementById('bgm');
 
   const btnAction = document.getElementById('btnAction');
-  const btnMusic = document.getElementById('btnMusic');
   const confettiCanvas = document.getElementById('confetti');
   let stopConfettiFn = null;
   let confettiActive = false;
@@ -178,10 +177,6 @@
     balloons.appendChild(fragment);
   }
 
-  btnMusic.addEventListener('click', () => {
-    playMusicWithFallback();
-    btnMusic.style.display = 'none';
-  });
 
   btnAction.addEventListener('click', () => {
     const step = steps[currentStepIndex];
@@ -194,16 +189,66 @@
   reset();
   updateActionLabel();
   
-  // Try to auto play music, but show button if blocked
-  setTimeout(() => {
-    const playPromise = bgm.play();
-    if(playPromise && typeof playPromise.catch === 'function'){
-      playPromise.catch(() => {
-        console.log('Autoplay blocked, showing music button');
-        btnMusic.style.display = 'inline-block';
-      });
+  // Auto-play music on page load
+  let musicPlaying = false;
+  
+  function startMusic() {
+    if (!musicPlaying && bgm) {
+      // Wait for audio to be ready if it's not already
+      if (bgm.readyState >= 2) { // HAVE_CURRENT_DATA or better
+        bgm.loop = true;
+        bgm.volume = 0.7;
+        bgm.muted = false;
+        
+        const playPromise = bgm.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.then(() => {
+            console.log('Auto-play music started successfully');
+            musicPlaying = true;
+          }).catch((error) => {
+            console.log('Auto-play blocked, will try again on user interaction:', error);
+          });
+        } else {
+          musicPlaying = true;
+        }
+      } else {
+        // Audio not ready yet, wait a bit and try again
+        console.log('Audio not ready, waiting...');
+        setTimeout(() => startMusic(), 200);
+      }
     }
-  }, 100);
+  }
+  
+  // Try to auto play music immediately
+  setTimeout(() => {
+    startMusic();
+  }, 500);
+  
+  // Add click listener to entire document to start music if not already playing
+  document.addEventListener('click', () => {
+    if (!musicPlaying && bgm) {
+      // Reset and try to play the original audio file
+      bgm.currentTime = 0;
+      bgm.loop = true;
+      bgm.volume = 0.7;
+      bgm.muted = false;
+      
+      const playPromise = bgm.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.then(() => {
+          console.log('Music started successfully');
+          musicPlaying = true;
+        }).catch((error) => {
+          console.log('Failed to play audio file, trying fallback:', error);
+          // Only use fallback if the original audio completely fails
+          playMusicWithFallback();
+          musicPlaying = true;
+        });
+      } else {
+        musicPlaying = true;
+      }
+    }
+  }, { once: false });
 
   function hideButtonsAfterFinal(){
     // hide the action button when the final message is shown
