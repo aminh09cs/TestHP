@@ -46,7 +46,7 @@
   const bgm = document.getElementById('bgm');
 
   const btnAction = document.getElementById('btnAction');
-  const btnReplay = document.getElementById('btnReplay');
+  const btnMusic = document.getElementById('btnMusic');
   const confettiCanvas = document.getElementById('confetti');
   let stopConfettiFn = null;
   let confettiActive = false;
@@ -54,12 +54,11 @@
   let confettiRepeat = false;
 
   const steps = [
-    { label: '1. Phát nhạc', run: () => { playMusicWithFallback(); } },
-    { label: '2. Thả banner', run: () => { banner.classList.add('show'); } },
-    { label: '3. Thả bóng bay', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
-    { label: '4. Mang bánh', run: () => { cake.classList.add('show'); setTimeout(() => cake.classList.add('lit'), 500); } },
-    { label: '5. Thổi nến', run: () => { cake.classList.add('blow'); setTimeout(() => cake.classList.remove('lit'), 50); } },
-    { label: '6. Lời chúc', run: () => { message.classList.add('show'); triggerConfetti(); hideButtonsAfterFinal(); } },
+    { label: 'Happy', run: () => { banner.classList.add('show'); } },
+    { label: 'Balloons', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
+    { label: 'Bring cake', run: () => { cake.classList.add('show'); setTimeout(() => cake.classList.add('lit'), 500); } },
+    { label: 'Blow candle', run: () => { cake.classList.add('blow'); setTimeout(() => cake.classList.remove('lit'), 50); } },
+    { label: 'Happy Birthday', run: () => { message.classList.add('show'); triggerConfetti(); hideButtonsAfterFinal(); } },
   ];
   let currentStepIndex = 0;
 
@@ -79,34 +78,67 @@
   function playMusicWithFallback(){
     if(!bgm){ return; }
     bgm.loop = true;
-    bgm.volume = 1;
-    const p = bgm.play();
-    if(p && typeof p.catch === 'function'){
-      p.catch(() => synthFallback());
+    bgm.volume = 0.7;
+    bgm.muted = false;
+    
+    // Try to play immediately
+    const playPromise = bgm.play();
+    if(playPromise && typeof playPromise.catch === 'function'){
+      playPromise.catch(() => {
+        console.log('Audio autoplay blocked, trying fallback');
+        synthFallback();
+      });
     }
+    
     // If audio element fires error, also fallback
-    bgm.addEventListener('error', synthFallback, { once:true });
+    bgm.addEventListener('error', () => {
+      console.log('Audio error, using fallback');
+      synthFallback();
+    }, { once:true });
+    
     // If no duration after a short wait, likely missing file
     setTimeout(() => {
-      if(isNaN(bgm.duration) || bgm.duration === 0){ synthFallback(); }
-    }, 800);
+      if(isNaN(bgm.duration) || bgm.duration === 0){ 
+        console.log('Audio file not loaded, using fallback');
+        synthFallback(); 
+      }
+    }, 1000);
   }
 
   function synthFallback(){
     try{
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       const ctx = new AudioCtx();
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type = 'sine';
-      o.frequency.value = 523.25; // C5
-      g.gain.setValueAtTime(0, ctx.currentTime);
-      g.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.05);
-      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 2.0);
-      o.start();
-      o.stop(ctx.currentTime + 2.1);
-    }catch(_){ /* ignore */ }
+      
+      // Create a simple melody loop
+      function playNote(frequency, startTime, duration) {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.type = 'sine';
+        o.frequency.value = frequency;
+        g.gain.setValueAtTime(0, startTime);
+        g.gain.linearRampToValueAtTime(0.1, startTime + 0.1);
+        g.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+        o.start(startTime);
+        o.stop(startTime + duration);
+      }
+      
+      // Play a simple birthday melody
+      const now = ctx.currentTime;
+      playNote(523.25, now, 0.5);      // C5
+      playNote(523.25, now + 0.5, 0.5); // C5
+      playNote(587.33, now + 1.0, 0.5); // D5
+      playNote(523.25, now + 1.5, 0.5); // C5
+      playNote(698.46, now + 2.0, 0.5); // F5
+      playNote(659.25, now + 2.5, 1.0); // E5
+      
+      // Loop the melody
+      setTimeout(() => synthFallback(), 4000);
+    }catch(e){ 
+      console.log('Fallback audio failed:', e);
+    }
   }
 
   function reset(){
@@ -146,6 +178,11 @@
     balloons.appendChild(fragment);
   }
 
+  btnMusic.addEventListener('click', () => {
+    playMusicWithFallback();
+    btnMusic.style.display = 'none';
+  });
+
   btnAction.addEventListener('click', () => {
     const step = steps[currentStepIndex];
     step.run();
@@ -153,15 +190,20 @@
     updateActionLabel();
   });
 
-  btnReplay.addEventListener('click', () => {
-    reset();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    currentStepIndex = 0;
-    updateActionLabel();
-  });
 
   reset();
   updateActionLabel();
+  
+  // Try to auto play music, but show button if blocked
+  setTimeout(() => {
+    const playPromise = bgm.play();
+    if(playPromise && typeof playPromise.catch === 'function'){
+      playPromise.catch(() => {
+        console.log('Autoplay blocked, showing music button');
+        btnMusic.style.display = 'inline-block';
+      });
+    }
+  }, 100);
 
   function hideButtonsAfterFinal(){
     // hide the action button when the final message is shown
