@@ -65,18 +65,11 @@ body{
 .balloon.pink{ background:radial-gradient(circle at 30% 30%, #fff4, transparent 55%), #ff99c8 }
 .balloon.orange{ background:radial-gradient(circle at 30% 30%, #fff4, transparent 55%), #f9c74f }
 
-/* Cake */
-.cake{ position:relative; width:220px; height:220px; display:grid; place-items:end center; transform:translateY(40px) scale(.9); opacity:0; transition:opacity .6s, transform .6s; }
-.cake.show{ opacity:1; transform:translateY(0) scale(1); }
-.plate{ width:240px; height:22px; background:linear-gradient(#fff,#ffe4f0); border-radius:100px; box-shadow:0 16px 32px rgba(210,140,170,.35) }
-.layer{ position:absolute; left:50%; transform:translateX(-50%); width:200px; background:linear-gradient(180deg,#ffd9ea,#ffc2de); border-radius:12px; box-shadow:inset 0 -8px 0 0 rgba(255,255,255,.35), 0 8px 18px rgba(210,140,170,.35) }
-.layer-bottom{ bottom:60px; height:70px; }
-.layer-middle{ bottom:110px; height:60px; width:170px; }
-.layer-top{ bottom:152px; height:42px; width:140px; }
-.candle{ position:absolute; bottom:174px; left:50%; transform:translateX(-50%); width:12px; height:36px; background:repeating-linear-gradient(90deg,#fff,#fff 6px,#ffd3e7 6px,#ffd3e7 12px); border-radius:3px; box-shadow:0 4px 10px rgba(210,140,170,.35) }
-.flame{ position:absolute; top:-18px; left:50%; transform:translateX(-50%); width:10px; height:16px; background:radial-gradient(closest-side, #fff7b1, #ff9f1c 65%, rgba(0,0,0,0) 66%); border-radius:10px 10px 10px 10px/16px 16px 8px 8px; box-shadow:0 0 16px 8px rgba(255,120,0,.55); animation:flicker .12s infinite; opacity:0 }
-.cake.lit .flame{ opacity:1 }
-@keyframes flicker{ 0%{ transform:translateX(-50%) scale(1) } 50%{ transform:translateX(calc(-50% + 1px)) scale(0.92) } 100%{ transform:translateX(-50%) scale(1) } }
+/* 3D Cake Container - Responsive */
+.cake{ position:relative; width:min(450px, 90vw); height:min(450px, 90vw); display:grid; place-items:center center; transform:translateY(-60px) scale(.8); opacity:0; transition:opacity .8s, transform .8s; margin:0 auto; }
+.cake.show{ opacity:1; transform:translateY(-120px) scale(1); }
+.cake3d-container{ width:100%; height:100%; position:relative; }
+.cake3d-container canvas{ border:none; border-radius:0; box-shadow:none; width:100% !important; height:100% !important; }
 
 /* Smoke for blow candle */
 .smoke{ position:absolute; bottom:190px; left:50%; width:2px; height:2px; transform:translateX(-50%); pointer-events:none }
