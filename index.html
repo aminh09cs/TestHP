@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Happy Birthday</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <canvas id="bgStars" class="bg-stars" aria-hidden="true"></canvas>
+    <canvas id="confetti" class="confetti-canvas" aria-hidden="true"></canvas>
+    <audio id="bgm" src="https://raw.githubusercontent.com/sapthesh/Birthday/master/hbd.mp3" preload="auto" crossorigin="anonymous"></audio>
+
+    
+
+    <div class="top-lights" id="lights" aria-hidden="true">
+      <svg class="garland" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="bulbGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="strand">
+          <path class="wire" d="M 20 50 C 200 160, 400 10, 600 120 S 1000 160, 1180 60" fill="none"/>
+          
+          <g class="bulb b1">
+            <circle cx="140" cy="110" r="12" class="c red"/>
+          </g>
+          <g class="bulb b2">
+            <circle cx="280" cy="70" r="12" class="c yellow"/>
+          </g>
+          <g class="bulb b3">
+            <circle cx="420" cy="130" r="12" class="c green"/>
+          </g>
+          <g class="bulb b4">
+            <circle cx="560" cy="85" r="12" class="c blue"/>
+          </g>
+          <g class="bulb b5">
+            <circle cx="700" cy="145" r="12" class="c pink"/>
+          </g>
+          <g class="bulb b6">
+            <circle cx="840" cy="95" r="12" class="c orange"/>
+          </g>
+          <g class="bulb b7">
+            <circle cx="980" cy="140" r="12" class="c red"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <header class="banner" id="banner">
+      <h1>Happy Birthday!</h1>
+    </header>
+
+    <main class="stage">
+      <section class="message" id="message">
+        <p>Chúc mừng sinh nhật! Chúc bạn thật nhiều sức khỏe, niềm vui và hạnh phúc. 🎉</p>
+      </section>
+
+      <div class="balloons" id="balloons">
+        <div class="balloon b1">🎈</div>
+        <div class="balloon b2">🎈</div>
+        <div class="balloon b3">🎈</div>
+        <div class="balloon b4">🎈</div>
+        <div class="balloon b5">🎈</div>
+        <div class="balloon b6">🎈</div>
+      </div>
+
+      <section class="cake" id="cake">
+        <div class="plate"></div>
+        <div class="layer layer-bottom"></div>
+        <div class="layer layer-middle"></div>
+        <div class="layer layer-top"></div>
+        <div class="candle">
+          <div class="flame"></div>
+        </div>
+        <div class="smoke" id="smoke"></div>
+      </section>
+
+      
+    </main>
+
+    <footer class="controls">
+      <button id="btnAction">1. Bật đèn</button>
+      <button id="btnReplay" class="secondary">Làm lại</button>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+  </body>
+  </html>
+
+
