@@ -16,12 +16,16 @@
 html,body{height:100%}
 body{
   margin:0;
-  font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  font-family:'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   background:radial-gradient(1200px 600px at 50% -20%, #ffeef6 0%, var(--bg) 65%);
   color:var(--text);
   overflow-x:hidden;
   display:flex;
   flex-direction:column;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Fullscreen background canvas */
@@ -46,7 +50,16 @@ body{
 /* Banner */
 .banner{ position:relative; margin:90px auto 10px; text-align:center; transform:translateY(-120%); opacity:0; transition:transform .9s cubic-bezier(.2,.9,.2,1.2), opacity .9s;}
 .banner.show{ transform:translateY(0); opacity:1; }
-.banner h1{ font-size:44px; letter-spacing:1.5px; margin:0; text-shadow:0 10px 24px rgba(0,0,0,.45) }
+.banner h1{ 
+  font-family: 'Comfortaa', 'Nunito', cursive;
+  font-size:44px; 
+  font-weight: 700;
+  letter-spacing:1.5px; 
+  margin:0; 
+  text-shadow:0 10px 24px rgba(0,0,0,.45);
+  line-height: 1.2;
+  vertical-align: baseline;
+}
 
 /* Stage */
 .stage{ flex:1; display:grid; place-items:center; position:relative; padding-bottom:0; }
@@ -81,7 +94,15 @@ body{
 /* Message */
 .message{ position:relative; margin:-8px auto 10px; text-align:center; opacity:0; transform:translateY(-8px); transition:opacity .6s, transform .6s; max-width:760px; padding:0 16px; }
 .message.show{ opacity:1; transform:translateY(0) }
-.message p{ color:var(--muted); font-size:18px; line-height:1.6; }
+.message p{ 
+  color:var(--muted); 
+  font-size:18px; 
+  line-height:1.7; 
+  font-weight: 400;
+  text-align: center;
+  vertical-align: baseline;
+  letter-spacing: 0.3px;
+}
 
 /* Controls */
 .controls{ position:fixed; inset:auto 0 0 0; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:14px 16px; }
@@ -90,8 +111,11 @@ body{
   border:none; 
   border-radius:25px; 
   padding:18px 24px; 
+  font-family: 'Nunito', sans-serif;
   font-weight:700; 
   font-size:16px;
+  line-height: 1.4;
+  vertical-align: baseline;
   width:180px;
   background:linear-gradient(to bottom, 
     #FFB6E8 0%, 
