@@ -372,32 +372,54 @@
     renderer.setClearColor(0x000000, 0);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = true;
+    renderer.antialias = true;
+    renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Natural lighting setup
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Increased for softer look
     scene.add(ambientLight);
     
+    // Main directional light with proper shadow settings
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(10, 10, 5);
+    directionalLight.position.set(5, 10, 5);
     directionalLight.castShadow = true;
+    
+    // Optimized shadow settings for natural look
+    directionalLight.shadow.mapSize.width = 1024; // Reduced for better performance
+    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.camera.near = 0.1;
+    directionalLight.shadow.camera.far = 25;
+    directionalLight.shadow.camera.left = -10;
+    directionalLight.shadow.camera.right = 10;
+    directionalLight.shadow.camera.top = 10;
+    directionalLight.shadow.camera.bottom = -10;
+    directionalLight.shadow.radius = 4; // Reduced for sharper shadows
+    directionalLight.shadow.blurSamples = 8; // Reduced for performance
     scene.add(directionalLight);
+    
+    // Soft fill light
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    fillLight.position.set(-3, 5, -2);
+    scene.add(fillLight);
 
     // Cake group
     const cakeGroup = new THREE.Group();
 
-    // Plate - bigger to match cake
-    const plateGeometry = new THREE.CylinderGeometry(4.8, 4.8, 0.3, 32);
-    const plateMaterial = new THREE.MeshPhongMaterial({ 
+    // Enhanced smooth plate
+    const plateGeometry = new THREE.CylinderGeometry(4.8, 4.8, 0.3, 64); // High-res
+    const plateMaterial = new THREE.MeshLambertMaterial({ 
       color: 0xffffff,
-      shininess: 100
+      flatShading: false
     });
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
     plate.position.y = -1.8;
     plate.receiveShadow = true;
+    plate.castShadow = true; // Plate should cast shadow
     cakeGroup.add(plate);
 
-    // Cake layers - repositioned higher
+    // Cake layers - Enhanced smooth geometry
     const layers = [
       { radius: 4, height: 1.6, color: 0xffb3e6, y: -1.3 }, // Pink bottom
       { radius: 3.2, height: 1.4, color: 0x81d4fa, y: 0.1 },  // Blue middle  
@@ -405,42 +427,63 @@
     ];
 
     layers.forEach((layer, index) => {
-      const geometry = new THREE.CylinderGeometry(layer.radius, layer.radius, layer.height, 32);
-      const material = new THREE.MeshPhongMaterial({ 
+      // High-resolution geometry for smooth circles
+      const geometry = new THREE.CylinderGeometry(
+        layer.radius, layer.radius, layer.height, 
+        64, // Increased radial segments from 32 to 64 for smoother curves
+        1,  // Height segments
+        false // Open ended
+      );
+      
+      // Enhanced material with better lighting
+      const material = new THREE.MeshLambertMaterial({ 
         color: layer.color,
-        shininess: 50
+        flatShading: false, // Smooth shading instead of flat
       });
+      
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.y = layer.y;
       mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      // Enable shadow casting for all cake layers
+      mesh.userData = { isCakeLayer: true };
       cakeGroup.add(mesh);
 
-      // Add white cream top border for all layers
-      const topBorderGeometry = new THREE.CylinderGeometry(layer.radius + 0.08, layer.radius + 0.08, 0.12, 32);
-      const topBorderMaterial = new THREE.MeshPhongMaterial({ 
+      // Smooth white cream borders with high resolution
+      const topBorderGeometry = new THREE.CylinderGeometry(
+        layer.radius + 0.08, layer.radius + 0.08, 0.12, 
+        64, // High resolution for smooth borders
+        1,
+        false
+      );
+      const topBorderMaterial = new THREE.MeshLambertMaterial({ 
         color: 0xffffff,
-        shininess: 100
+        flatShading: false,
       });
       const topBorder = new THREE.Mesh(topBorderGeometry, topBorderMaterial);
       topBorder.position.y = layer.y + (layer.height/2 + 0.06);
       topBorder.castShadow = true;
+      topBorder.receiveShadow = true;
+      // Cream borders should cast subtle shadows
+      topBorder.userData = { isCreamBorder: true };
       cakeGroup.add(topBorder);
     });
 
 
-    // Candle - repositioned higher
-    const candleGeometry = new THREE.CylinderGeometry(0.12, 0.12, 1.5, 16);
-    const candleMaterial = new THREE.MeshPhongMaterial({ 
+    // Smooth candle with high resolution
+    const candleGeometry = new THREE.CylinderGeometry(0.12, 0.12, 1.5, 32); // Increased from 16 to 32
+    const candleMaterial = new THREE.MeshLambertMaterial({ 
       color: 0xff6b9d,
-      shininess: 30
+      flatShading: false
     });
     const candle = new THREE.Mesh(candleGeometry, candleMaterial);
     candle.position.y = 2.45;
     candle.castShadow = true;
+    candle.receiveShadow = true;
     cakeGroup.add(candle);
 
-    // Flame (will be shown/hidden) - repositioned higher
-    const flameGeometry = new THREE.SphereGeometry(0.18, 8, 8);
+    // Smooth flame with higher resolution
+    const flameGeometry = new THREE.SphereGeometry(0.18, 16, 12); // Increased resolution
     const flameMaterial = new THREE.MeshBasicMaterial({ 
       color: 0xffeb3b,
       transparent: true,
@@ -451,20 +494,23 @@
     flame.scale.y = 1.5;
     cakeGroup.add(flame);
 
-    // Add decorative elements - bigger and more
+    // Smooth decorative elements
     const decorations = [];
     for(let i = 0; i < 16; i++) {
       const angle = (i / 16) * Math.PI * 2;
       const radius = 3.2;
       
-      const decorGeometry = new THREE.SphereGeometry(0.12, 8, 8);
-      const decorMaterial = new THREE.MeshPhongMaterial({ 
-        color: i % 3 === 0 ? 0xff69b4 : i % 3 === 1 ? 0xffd700 : 0x00ff88
+      const decorGeometry = new THREE.SphereGeometry(0.12, 16, 12); // Higher resolution spheres
+      const decorMaterial = new THREE.MeshLambertMaterial({ 
+        color: i % 3 === 0 ? 0xff69b4 : i % 3 === 1 ? 0xffd700 : 0x00ff88,
+        flatShading: false
       });
       const decor = new THREE.Mesh(decorGeometry, decorMaterial);
       decor.position.x = Math.cos(angle) * radius;
       decor.position.z = Math.sin(angle) * radius;
       decor.position.y = -0.6;
+      decor.castShadow = true;
+      decor.receiveShadow = true;
       decorations.push(decor);
       cakeGroup.add(decor);
     }
