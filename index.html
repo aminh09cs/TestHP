@@ -86,7 +86,18 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
     <script src="assets/js/main.js"></script>
+    
+    <script>
+      // Initialize bubbles cursor effect with pink theme to match the birthday theme
+      window.addEventListener("load", () => {
+        new cursoreffects.bubbleCursor({
+          fillColor: "#ff6fa5",   // Pink color matching the theme
+          strokeColor: "#ffb3d9"  // Light pink for stroke
+        });
+      });
+    </script>
   </body>
   </html>
 
