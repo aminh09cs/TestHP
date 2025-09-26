@@ -86,17 +86,195 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
     <script src="assets/js/main.js"></script>
     
     <script>
-      // Initialize bubbles cursor effect with pink theme to match the birthday theme
-      window.addEventListener("load", () => {
-        new cursoreffects.bubbleCursor({
-          fillColor: "#ff6fa5",   // Pink color matching the theme
-          strokeColor: "#ffb3d9"  // Light pink for stroke
-        });
-      });
+      // Custom Big Long-lasting Bubbles Cursor Effect
+      (function() {
+        console.log('🫧 Initializing custom bubbles...');
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initBubbles);
+        } else {
+          initBubbles();
+        }
+        
+        function initBubbles() {
+          // Create canvas
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Style canvas - make sure it's visible and on top
+          canvas.style.position = 'fixed';
+          canvas.style.top = '0';
+          canvas.style.left = '0';
+          canvas.style.pointerEvents = 'none';
+          canvas.style.zIndex = '999999';
+          canvas.style.background = 'transparent';
+          canvas.id = 'bubble-cursor-canvas';
+          
+          // Add to document
+          document.body.appendChild(canvas);
+          console.log('✅ Canvas added to DOM');
+          
+          let bubbles = [];
+          let isRunning = true;
+          
+          // Resize function
+          function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            console.log('📐 Canvas resized:', canvas.width, 'x', canvas.height);
+          }
+          
+          // Create big, long-lasting bubble
+          function createBubble(x, y) {
+            const bubble = {
+              x: x + (Math.random() - 0.5) * 30,
+              y: y + (Math.random() - 0.5) * 30,
+              size: Math.random() * 15 + 12, // Medium: 12-27px
+              vx: (Math.random() - 0.5) * 4,
+              vy: -Math.random() * 3 - 1, // Float up
+              life: 0,
+              maxLife: Math.random() * 240 + 180, // LONG: 3-8 seconds at 60fps
+              color: Math.random() > 0.5 ? 'rgba(255, 111, 165, 0.6)' : 'rgba(255, 179, 217, 0.6)',
+              growing: true
+            };
+            
+            bubbles.push(bubble);
+            
+            // Limit bubbles for performance
+            if (bubbles.length > 50) {
+              bubbles.shift();
+            }
+          }
+          
+          // Animation loop
+          function animate() {
+            if (!isRunning) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw bubbles
+            for (let i = bubbles.length - 1; i >= 0; i--) {
+              const bubble = bubbles[i];
+              bubble.life++;
+              
+              // Movement
+              bubble.x += bubble.vx;
+              bubble.y += bubble.vy;
+              bubble.vy *= 0.995; // Slow down over time
+              
+              // Size animation - grow then shrink
+              let sizeMultiplier = 1;
+              if (bubble.life < bubble.maxLife * 0.7) {
+                // Growing phase
+                sizeMultiplier = 0.3 + (bubble.life / (bubble.maxLife * 0.7)) * 0.7;
+              } else {
+                // Shrinking phase
+                const shrinkProgress = (bubble.life - bubble.maxLife * 0.7) / (bubble.maxLife * 0.3);
+                sizeMultiplier = 1 - shrinkProgress * 0.8;
+              }
+              
+              const currentSize = bubble.size * sizeMultiplier;
+              
+              // Opacity animation
+              let opacity = 1;
+              if (bubble.life < 20) {
+                opacity = bubble.life / 20;
+              } else if (bubble.life > bubble.maxLife * 0.8) {
+                const fadeProgress = (bubble.life - bubble.maxLife * 0.8) / (bubble.maxLife * 0.2);
+                opacity = 1 - fadeProgress;
+              }
+              
+              // Draw bubble
+              if (opacity > 0 && currentSize > 0) {
+                ctx.save();
+                ctx.globalAlpha = opacity;
+                
+                // Main bubble
+                ctx.fillStyle = bubble.color;
+                ctx.beginPath();
+                ctx.arc(bubble.x, bubble.y, currentSize, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Highlight
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.beginPath();
+                ctx.arc(
+                  bubble.x - currentSize * 0.3, 
+                  bubble.y - currentSize * 0.3, 
+                  currentSize * 0.4, 
+                  0, Math.PI * 2
+                );
+                ctx.fill();
+                
+                // Border
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(bubble.x, bubble.y, currentSize, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.restore();
+              }
+              
+              // Remove dead bubbles
+              if (bubble.life >= bubble.maxLife || bubble.y < -currentSize) {
+                bubbles.splice(i, 1);
+              }
+            }
+            
+            requestAnimationFrame(animate);
+          }
+          
+          // Mouse events
+          let lastMouse = { x: 0, y: 0 };
+          let mouseMoving = false;
+          
+          document.addEventListener('mousemove', (e) => {
+            const dx = e.clientX - lastMouse.x;
+            const dy = e.clientY - lastMouse.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Create bubbles based on mouse speed
+            if (distance > 5) {
+              createBubble(e.clientX, e.clientY);
+              mouseMoving = true;
+            }
+            
+            lastMouse.x = e.clientX;
+            lastMouse.y = e.clientY;
+          });
+          
+          // Click for burst effect
+          document.addEventListener('click', (e) => {
+            for (let i = 0; i < 8; i++) {
+              setTimeout(() => {
+                createBubble(
+                  e.clientX + (Math.random() - 0.5) * 80,
+                  e.clientY + (Math.random() - 0.5) * 80
+                );
+              }, i * 50);
+            }
+          });
+          
+          // Setup
+          window.addEventListener('resize', resizeCanvas);
+          resizeCanvas();
+          animate();
+          
+          console.log('🎉 Custom bubbles initialized! Move mouse to see big bubbles');
+          
+          // Test bubble immediately
+          setTimeout(() => {
+            createBubble(window.innerWidth / 2, window.innerHeight / 2);
+            console.log('🧪 Test bubble created at center');
+          }, 1000);
+        }
+      })();
     </script>
   </body>
   </html>
