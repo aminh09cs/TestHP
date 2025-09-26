@@ -494,6 +494,56 @@
     flame.scale.y = 1.5;
     cakeGroup.add(flame);
 
+    // Add "Trang & Trinh" text on top of the cake
+    const textGeometry = new THREE.PlaneGeometry(3, 0.8);
+    const textMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0xff6b9d,
+      transparent: true,
+      opacity: 0.9,
+      side: THREE.DoubleSide
+    });
+    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    textMesh.position.y = 2.3; // Position
+    textMesh.position.z = 0.5; // Slightly in front
+    textMesh.rotation.x = -Math.PI / 6; // Slight tilt for better visibility
+    cakeGroup.add(textMesh);
+
+    // Create high-resolution text texture with "Trang & Trinh"
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = 1024; // Higher resolution
+    canvas.height = 256;
+    
+    // Set pink background
+    context.fillStyle = 'rgba(255, 107, 157, 0.9)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Set text style with maximum sharpness
+    context.fillStyle = '#000000'; // Black text for contrast
+    context.font = 'bold 96px Arial, sans-serif'; // Larger font
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    
+    // Add white text shadow for black text on pink background
+    context.shadowColor = 'rgba(255, 255, 255, 0.8)';
+    context.shadowBlur = 6;
+    context.shadowOffsetX = 2;
+    context.shadowOffsetY = 2;
+    
+    // Draw text
+    context.fillText('Trang & Trinh', canvas.width / 2, canvas.height / 2);
+    
+    // Create texture from canvas with better filtering
+    const textTexture = new THREE.CanvasTexture(canvas);
+    textTexture.needsUpdate = true;
+    textTexture.minFilter = THREE.LinearFilter;
+    textTexture.magFilter = THREE.LinearFilter;
+    
+    // Update text material with texture
+    textMaterial.map = textTexture;
+    textMaterial.transparent = true;
+    textMaterial.opacity = 0.95;
+
     // Smooth decorative elements
     const decorations = [];
     for(let i = 0; i < 16; i++) {
