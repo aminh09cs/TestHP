@@ -594,6 +594,214 @@
     flame2.rotation.y = 0; // No rotation for centered flame
     cakeGroup.add(flame2);
 
+    // Function to create a realistic frosting swirl
+    function createFrostingSwirl() {
+      const frostingGroup = new THREE.Group();
+      
+      // Create a more complex swirl using multiple layers - SAME SIZE AS CHERRY
+      // Base layer - wider bottom (same size as cherry)
+      const baseGeometry = new THREE.CylinderGeometry(0.20, 0.25, 0.10, 12);
+      const baseMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0xffffff,
+        shininess: 80,
+        specular: 0x888888
+      });
+      const base = new THREE.Mesh(baseGeometry, baseMaterial);
+      base.position.y = 0.05;
+      base.castShadow = true;
+      base.receiveShadow = true;
+      frostingGroup.add(base);
+      
+      // Middle layer - tapered
+      const middleGeometry = new THREE.CylinderGeometry(0.18, 0.22, 0.12, 12);
+      const middleMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0xffffff,
+        shininess: 85,
+        specular: 0x999999
+      });
+      const middle = new THREE.Mesh(middleGeometry, middleMaterial);
+      middle.position.y = 0.16;
+      middle.castShadow = true;
+      middle.receiveShadow = true;
+      frostingGroup.add(middle);
+      
+      // Top swirl - cone with spiral effect - SAME SIZE AS CHERRY
+      const topGeometry = new THREE.ConeGeometry(0.15, 0.20, 8); // Same size as cherry
+      const topMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0xffffff,
+        shininess: 90,
+        specular: 0xaaaaaa
+      });
+      const top = new THREE.Mesh(topGeometry, topMaterial);
+      top.position.y = 0.30; // Same height as cherry
+      top.castShadow = true;
+      top.receiveShadow = true;
+      frostingGroup.add(top);
+      
+      // Add spiral ridges for more realistic swirl effect - SAME SIZE AS CHERRY
+      for (let j = 0; j < 8; j++) {
+        const ridgeGeometry = new THREE.CylinderGeometry(0.025, 0.035, 0.15, 6); // Larger ridges
+        const ridgeMaterial = new THREE.MeshPhongMaterial({ 
+          color: 0xffffff,
+          shininess: 75
+        });
+        const ridge = new THREE.Mesh(ridgeGeometry, ridgeMaterial);
+        const angle = (j / 8) * Math.PI * 2;
+        const radius = 0.18 + (j * 0.005); // Slightly increasing radius
+        ridge.position.x = Math.cos(angle) * radius;
+        ridge.position.z = Math.sin(angle) * radius;
+        ridge.position.y = 0.08 + (j * 0.02); // Adjusted spiral upward
+        ridge.rotation.z = angle + (j * 0.3); // Spiral rotation
+        ridge.castShadow = true;
+        ridge.receiveShadow = true;
+        frostingGroup.add(ridge);
+      }
+      
+      // Move the entire frosting group down so the base touches the cake surface
+      frostingGroup.position.y = -0.35; // Much larger offset to make base truly touch cake surface
+      
+      return frostingGroup;
+    }
+
+    // Function to create a realistic 3D cherry
+    function createCherry() {
+      const cherryGroup = new THREE.Group();
+      
+      // Cherry body - realistic red sphere with slight oval shape
+      const cherryGeometry = new THREE.SphereGeometry(0.25, 32, 32);
+      cherryGeometry.scale(1, 1.1, 1); // Slightly oval for more realistic look
+      const cherryMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0x8b0000, // Dark red cherry color like real cherries
+        shininess: 30, // Natural shine
+        specular: 0x222222 // Subtle specular reflection
+      });
+      const cherry = new THREE.Mesh(cherryGeometry, cherryMaterial);
+      cherry.castShadow = true; // Enable soft shadow casting
+      cherry.receiveShadow = true;
+      cherryGroup.add(cherry);
+      
+      // Cherry stem - green curved stem
+      const stemGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.4, 8);
+      const stemMaterial = new THREE.MeshLambertMaterial({ 
+        color: 0x228b22, // Forest green
+        flatShading: false
+      });
+      const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+      stem.position.y = 0.25; // Relative to cherry
+      stem.rotation.z = Math.PI / 6; // Slight curve
+      stem.rotation.x = Math.PI / 8;
+      stem.castShadow = true; // Enable shadow for stem
+      stem.receiveShadow = true;
+      cherryGroup.add(stem);
+      
+      // Cherry leaf - small green leaf
+      const leafGeometry = new THREE.SphereGeometry(0.08, 8, 8);
+      leafGeometry.scale(1.5, 0.3, 1); // Flatten to leaf shape
+      const leafMaterial = new THREE.MeshLambertMaterial({ 
+        color: 0x32cd32, // Lime green
+        flatShading: false
+      });
+      const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+      leaf.position.set(0.05, 0.45, 0.05); // Relative to cherry
+      leaf.rotation.z = Math.PI / 4; // Angled leaf
+      leaf.rotation.x = Math.PI / 6;
+      leaf.castShadow = false; // Disable shadow casting
+      leaf.receiveShadow = true;
+      cherryGroup.add(leaf);
+      
+      return cherryGroup;
+    }
+
+    // Add many cherries and frosting around tier 2 (middle blue tier) to fill it up
+    const tier2Cherries = [];
+    const tier2Frosting = [];
+    const totalCount = 24; // Total decorations (12 cherries + 12 frosting)
+    
+    for (let i = 0; i < totalCount; i++) {
+      const angle = (i / totalCount) * Math.PI * 2; // Evenly spaced around the circle
+      const radius = 3.2 + 0.25; // Slightly outside the middle tier radius
+      
+      if (i % 2 === 0) {
+        // Add cherry every other position
+        const cherry = createCherry();
+        cherry.position.x = Math.cos(angle) * radius;
+        cherry.position.z = Math.sin(angle) * radius;
+        cherry.position.y = -0.2; // Lower position, closer to tier 2 surface
+        
+        // Add slight random variation for natural look
+        cherry.position.x += (Math.random() - 0.5) * 0.15;
+        cherry.position.z += (Math.random() - 0.5) * 0.15;
+        cherry.position.y += (Math.random() - 0.5) * 0.05;
+        
+        // Random rotation for variety
+        cherry.rotation.y = Math.random() * Math.PI * 2;
+        
+        tier2Cherries.push(cherry);
+        cakeGroup.add(cherry);
+      } else {
+        // Add frosting every other position
+        const frosting = createFrostingSwirl();
+        frosting.position.x = Math.cos(angle) * radius;
+        frosting.position.z = Math.sin(angle) * radius;
+        frosting.position.y = -0.5; // Much lower position, very close to cake surface
+        
+        // Add slight random variation
+        frosting.position.x += (Math.random() - 0.5) * 0.1;
+        frosting.position.z += (Math.random() - 0.5) * 0.1;
+        frosting.position.y += (Math.random() - 0.5) * 0.03;
+        
+        frosting.castShadow = true;
+        frosting.receiveShadow = true;
+        tier2Frosting.push(frosting);
+        cakeGroup.add(frosting);
+      }
+    }
+
+    // Add decorations for tier 1 (bottom pink tier)
+    const tier1Cherries = [];
+    const tier1Frosting = [];
+    const tier1TotalCount = 32; // Total decorations (16 cherries + 16 frosting) - more dense
+    
+    for (let i = 0; i < tier1TotalCount; i++) {
+      const angle = (i / tier1TotalCount) * Math.PI * 2; // Evenly spaced around the circle
+      const radius = 4.0 + 0.3; // Slightly outside the bottom tier radius
+      
+      if (i % 2 === 0) {
+        // Add cherry every other position
+        const cherry = createCherry();
+        cherry.position.x = Math.cos(angle) * radius;
+        cherry.position.z = Math.sin(angle) * radius;
+        cherry.position.y = -1.3; // On the bottom tier surface
+        
+        // Add slight random variation for natural look
+        cherry.position.x += (Math.random() - 0.5) * 0.2;
+        cherry.position.z += (Math.random() - 0.5) * 0.2;
+        cherry.position.y += (Math.random() - 0.5) * 0.08;
+        
+        // Random rotation for variety
+        cherry.rotation.y = Math.random() * Math.PI * 2;
+        
+        tier1Cherries.push(cherry);
+        cakeGroup.add(cherry);
+      } else {
+        // Add frosting every other position
+        const frosting = createFrostingSwirl();
+        frosting.position.x = Math.cos(angle) * radius;
+        frosting.position.z = Math.sin(angle) * radius;
+        frosting.position.y = -1.3; // Same position as cherry
+        
+        // Add slight random variation
+        frosting.position.x += (Math.random() - 0.5) * 0.15;
+        frosting.position.z += (Math.random() - 0.5) * 0.15;
+        frosting.position.y += (Math.random() - 0.5) * 0.05;
+        
+        frosting.castShadow = true;
+        frosting.receiveShadow = true;
+        tier1Frosting.push(frosting);
+        cakeGroup.add(frosting);
+      }
+    }
+
     // Add "Trang & Trinh" text on top of the cake
     const textGeometry = new THREE.PlaneGeometry(3, 0.8);
     const textMaterial = new THREE.MeshBasicMaterial({ 
@@ -692,6 +900,32 @@
       decorations.forEach((decor, i) => {
         decor.rotation.y += 0.02;
         decor.position.y = -0.6 + Math.sin(Date.now() * 0.003 + i) * 0.1;
+      });
+
+      // Animate tier 2 cherries with individual gentle motions
+      tier2Cherries.forEach((cherry, i) => {
+        cherry.rotation.y += 0.002 + (i * 0.0003); // Slightly different rotation speeds
+        cherry.position.y = -0.2 + Math.sin(Date.now() * 0.001 + i * 0.5) * 0.02; // Gentle up-down motion around new base position
+        cherry.rotation.z = Math.sin(Date.now() * 0.0012 + i * 0.3) * 0.04; // Gentle swaying
+      });
+
+      // Animate frosting dots with gentle bobbing motion
+      tier2Frosting.forEach((frosting, i) => {
+        frosting.position.y = -0.15 + Math.sin(Date.now() * 0.0008 + i * 0.4) * 0.015; // Gentle bobbing
+        frosting.rotation.y += 0.001; // Very slow rotation
+      });
+
+      // Animate tier 1 cherries with individual gentle motions
+      tier1Cherries.forEach((cherry, i) => {
+        cherry.rotation.y += 0.0015 + (i * 0.0002); // Slightly different rotation speeds
+        cherry.position.y = -1.3 + Math.sin(Date.now() * 0.0008 + i * 0.4) * 0.025; // Gentle up-down motion
+        cherry.rotation.z = Math.sin(Date.now() * 0.001 + i * 0.25) * 0.03; // Gentle swaying
+      });
+
+      // Animate tier 1 frosting with gentle bobbing motion
+      tier1Frosting.forEach((frosting, i) => {
+        frosting.position.y = -1.3 + Math.sin(Date.now() * 0.0006 + i * 0.3) * 0.02; // Gentle bobbing
+        frosting.rotation.y += 0.0008; // Very slow rotation
       });
 
       // Shader flame animation
