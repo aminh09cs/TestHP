@@ -153,29 +153,234 @@
     lights.classList.add('on');
     // ensure confetti stops when resetting
     if(typeof stopConfettiFn === 'function'){ try{ stopConfettiFn(); }catch(_){} stopConfettiFn = null; }
+    
+    // Clean up 3D balloons
+    if (balloonMeshes && balloonMeshes.length > 0) {
+      balloonMeshes.forEach(balloon => {
+        if (balloonScene) {
+          balloonScene.remove(balloon.group);
+        }
+      });
+      balloonMeshes = [];
+    }
+    
+    // Stop 3D balloon animation
+    if (balloonAnimationId) {
+      cancelAnimationFrame(balloonAnimationId);
+      balloonAnimationId = null;
+    }
+  }
+
+  // 3D Balloons System
+  let balloonScene, balloonCamera, balloonRenderer, balloonContainer;
+  let balloonMeshes = [];
+  let balloonAnimationId;
+
+  function init3DBalloons() {
+    if (!window.THREE) return;
+
+    // Create container for 3D balloons
+    balloonContainer = document.createElement('div');
+    balloonContainer.style.position = 'fixed';
+    balloonContainer.style.top = '0';
+    balloonContainer.style.left = '0';
+    balloonContainer.style.width = '100%';
+    balloonContainer.style.height = '100%';
+    balloonContainer.style.pointerEvents = 'none';
+    balloonContainer.style.zIndex = '35'; // Below cake, above background
+    document.body.appendChild(balloonContainer);
+
+    // Scene setup
+    balloonScene = new THREE.Scene();
+    balloonCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    balloonRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    balloonRenderer.setSize(window.innerWidth, window.innerHeight);
+    balloonRenderer.setClearColor(0x000000, 0);
+    balloonContainer.appendChild(balloonRenderer.domElement);
+
+    // Enhanced lighting for realistic balloons
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    balloonScene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    directionalLight.position.set(5, 10, 5);
+    directionalLight.castShadow = true;
+    balloonScene.add(directionalLight);
+
+    // Soft fill light
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+    fillLight.position.set(-3, 5, -2);
+    balloonScene.add(fillLight);
+
+    // Camera position
+    balloonCamera.position.z = 6;
+    balloonCamera.position.y = 1;
+  }
+
+  function create3DBalloon(color, x, scale, delay) {
+    if (!balloonScene) return null;
+
+    const balloonGroup = new THREE.Group();
+
+    // Balloon body - realistic teardrop shape
+    const balloonGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+    balloonGeometry.scale(1, 1.5, 1); // More teardrop-like
+    
+    // Enhanced balloon material
+    const balloonMaterial = new THREE.MeshPhongMaterial({
+      color: color,
+      shininess: 150,
+      specular: 0x666666,
+      transparent: true,
+      opacity: 0.95
+    });
+
+    const balloonMesh = new THREE.Mesh(balloonGeometry, balloonMaterial);
+    balloonMesh.castShadow = true;
+    balloonMesh.receiveShadow = true;
+    balloonGroup.add(balloonMesh);
+
+    // Balloon neck - more realistic
+    const neckGeometry = new THREE.CylinderGeometry(0.04, 0.06, 0.1, 16);
+    const neckMaterial = new THREE.MeshPhongMaterial({
+      color: color,
+      shininess: 80
+    });
+    const neckMesh = new THREE.Mesh(neckGeometry, neckMaterial);
+    neckMesh.position.y = -0.4;
+    neckMesh.castShadow = true;
+    balloonGroup.add(neckMesh);
+
+    // Balloon string - attached to balloon base
+    const stringGeometry = new THREE.CylinderGeometry(0.003, 0.003, 1.2, 8);
+    const stringMaterial = new THREE.MeshLambertMaterial({
+      color: 0xcccccc,
+      transparent: true,
+      opacity: 0.8
+    });
+    const stringMesh = new THREE.Mesh(stringGeometry, stringMaterial);
+    stringMesh.position.y = -0.5; // Attached to balloon base
+    stringMesh.rotation.z = Math.random() * 0.4 - 0.2;
+    balloonGroup.add(stringMesh);
+
+    // Position and scale
+    balloonGroup.position.x = x;
+    balloonGroup.position.y = -3;
+    balloonGroup.position.z = (Math.random() - 0.5) * 3;
+    balloonGroup.scale.setScalar(scale);
+
+    // Add to scene
+    balloonScene.add(balloonGroup);
+    balloonMeshes.push({
+      group: balloonGroup,
+      startTime: Date.now() + delay * 1000,
+      duration: (8 + Math.random() * 4) * 1000,
+      originalX: x,
+      originalZ: balloonGroup.position.z,
+      originalScale: scale,
+      stringMesh: stringMesh
+    });
+
+    return balloonGroup;
+  }
+
+  function animate3DBalloons() {
+    if (!balloonRenderer || !balloonScene || !balloonCamera) return;
+
+    const currentTime = Date.now();
+
+    // Update each balloon
+    for (let i = balloonMeshes.length - 1; i >= 0; i--) {
+      const balloon = balloonMeshes[i];
+      const elapsed = currentTime - balloon.startTime;
+
+      if (elapsed < 0) continue;
+
+      const progress = Math.min(elapsed / balloon.duration, 1);
+      
+      if (progress >= 1) {
+        balloonScene.remove(balloon.group);
+        balloonMeshes.splice(i, 1);
+        continue;
+      }
+
+      // Smooth easing
+      const easeProgress = 1 - Math.pow(1 - progress, 2);
+
+      // Rise up
+      balloon.group.position.y = -3 + easeProgress * 10;
+
+      // Wind effect
+      const windOffset = Math.sin(progress * Math.PI * 3) * 0.3;
+      balloon.group.position.x = balloon.originalX + windOffset;
+      
+      // Depth movement
+      balloon.group.position.z = balloon.originalZ + Math.sin(progress * Math.PI * 2) * 0.2;
+
+      // Gentle rotation
+      balloon.group.rotation.z = Math.sin(progress * Math.PI * 2) * 0.05;
+
+      // String sway
+      balloon.stringMesh.rotation.z = Math.sin(currentTime * 0.003 + i) * 0.3;
+
+      // Fade out
+      if (progress > 0.85) {
+        const fadeProgress = (progress - 0.85) / 0.15;
+        balloon.group.children.forEach(child => {
+          if (child.material) {
+            child.material.opacity = 0.95 * (1 - fadeProgress);
+          }
+        });
+      }
+    }
+
+    balloonRenderer.render(balloonScene, balloonCamera);
+    balloonAnimationId = requestAnimationFrame(animate3DBalloons);
   }
 
   function spawnBalloons(){
-    const colors = ['red','yellow','green','blue','pink','orange'];
-    const count = 24;
-    const fragment = document.createDocumentFragment();
-    for(let i=0;i<count;i++){
-      const el = document.createElement('div');
-      el.className = 'balloon ' + colors[i % colors.length];
-      // random horizontal offset and size/animation duration
-      const x = (-45 + Math.random()*90) + 'vw';
-      const scale = 0.8 + Math.random()*0.8;
-      const dur = (7 + Math.random()*6) + 's';
-      const delay = (Math.random()*2) + 's';
-      el.style.setProperty('--x', x);
-      el.style.setProperty('--s', scale.toString());
-      el.style.setProperty('--dur', dur);
-      el.style.animationDelay = delay;
-      el.addEventListener('animationend', () => el.remove());
-      fragment.appendChild(el);
+    // Initialize 3D balloons if not already done
+    if (!balloonScene) {
+      init3DBalloons();
     }
-    balloons.appendChild(fragment);
+
+    const colors = [
+      0xef476f, // red
+      0xffd166, // yellow  
+      0x06d6a0, // green
+      0x4cc9f0, // blue
+      0xff99c8, // pink
+      0xf9c74f  // orange
+    ];
+    
+    // Perfect number for beautiful frame composition
+    const count = 12;
+    
+    // Create balloons with strategic positioning
+    for(let i = 0; i < count; i++){
+      // Even distribution across screen width
+      const x = (-4 + (i / (count - 1)) * 8) + (Math.random() - 0.5) * 0.8;
+      const scale = 0.8 + Math.random() * 0.4;
+      const delay = 0; // All balloons launch simultaneously
+      const color = colors[i % colors.length];
+      
+      create3DBalloon(color, x, scale, delay);
+    }
+
+    // Start animation
+    if (!balloonAnimationId) {
+      animate3DBalloons();
+    }
   }
+
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    if (balloonCamera && balloonRenderer) {
+      balloonCamera.aspect = window.innerWidth / window.innerHeight;
+      balloonCamera.updateProjectionMatrix();
+      balloonRenderer.setSize(window.innerWidth, window.innerHeight);
+    }
+  });
 
 
   btnAction.addEventListener('click', () => {
