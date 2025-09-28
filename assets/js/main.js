@@ -470,7 +470,7 @@
     });
 
 
-    // Function to create smooth curved number candle shape
+    // Function to create clean number candle shapes
     function createNumberCandle(number, color) {
       const candleGroup = new THREE.Group();
       const material = new THREE.MeshLambertMaterial({ 
@@ -479,149 +479,202 @@
       });
       
       if (number === 2) {
-        // Create proper number "2" shape with cleaner geometry
-        
-        // Top curved part using torus
-        const topCurveGeometry = new THREE.TorusGeometry(0.2, 0.06, 8, 16, Math.PI);
-        const topCurve = new THREE.Mesh(topCurveGeometry, material);
-        topCurve.position.set(0, 0.4, 0);
-        topCurve.rotation.z = Math.PI;
-        topCurve.castShadow = true;
-        topCurve.receiveShadow = true;
-        candleGroup.add(topCurve);
-        
-        // Right vertical part
-        const rightBarGeometry = new THREE.BoxGeometry(0.12, 0.25, 0.12);
-        const rightBar = new THREE.Mesh(rightBarGeometry, material);
-        rightBar.position.set(0.2, 0.15, 0);
-        rightBar.castShadow = true;
-        rightBar.receiveShadow = true;
-        candleGroup.add(rightBar);
-        
-        // Diagonal part
-        const diagonalGeometry = new THREE.BoxGeometry(0.12, 0.5, 0.12);
-        const diagonal = new THREE.Mesh(diagonalGeometry, material);
-        diagonal.position.set(-0.05, -0.1, 0);
-        diagonal.rotation.z = -Math.PI / 4;
-        diagonal.castShadow = true;
-        diagonal.receiveShadow = true;
-        candleGroup.add(diagonal);
-        
-        // Bottom horizontal bar
-        const bottomBarGeometry = new THREE.BoxGeometry(0.6, 0.12, 0.12);
-        const bottomBar = new THREE.Mesh(bottomBarGeometry, material);
-        bottomBar.position.set(0, -0.54, 0);
-        bottomBar.castShadow = true;
-        bottomBar.receiveShadow = true;
-        candleGroup.add(bottomBar);
-        
-        // Add rounded corners
-        const cornerRadius = 0.06;
-        const cornerGeometry = new THREE.SphereGeometry(cornerRadius, 8, 8);
-        
-        // Bottom corners
-        const bottomLeftCorner = new THREE.Mesh(cornerGeometry, material);
-        bottomLeftCorner.position.set(-0.24, -0.54, 0);
-        bottomLeftCorner.castShadow = true;
-        bottomLeftCorner.receiveShadow = true;
-        candleGroup.add(bottomLeftCorner);
-        
-        const bottomRightCorner = new THREE.Mesh(cornerGeometry, material);
-        bottomRightCorner.position.set(0.24, -0.54, 0);
-        bottomRightCorner.castShadow = true;
-        bottomRightCorner.receiveShadow = true;
-        candleGroup.add(bottomRightCorner);
-        
-      } else if (number === 5) {
-        // Create proper number "5" shape like the reference image
+        // Create number "2" with simple, clean design
         
         // Top horizontal bar
-        const topBarGeometry = new THREE.BoxGeometry(0.6, 0.12, 0.12);
-        const topBar = new THREE.Mesh(topBarGeometry, material);
-        topBar.position.set(0, 0.54, 0);
-        topBar.castShadow = true;
-        topBar.receiveShadow = true;
-        candleGroup.add(topBar);
+        const topGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const top = new THREE.Mesh(topGeometry, material);
+        top.position.set(0, 0.5, 0);
+        top.castShadow = true;
+        top.receiveShadow = true;
+        candleGroup.add(top);
         
-        // Left vertical bar (top part only)
-        const leftBarGeometry = new THREE.BoxGeometry(0.12, 0.36, 0.12);
-        const leftBar = new THREE.Mesh(leftBarGeometry, material);
-        leftBar.position.set(-0.24, 0.3, 0);
-        leftBar.castShadow = true;
-        leftBar.receiveShadow = true;
-        candleGroup.add(leftBar);
+        // Right vertical bar
+        const rightGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+        const right = new THREE.Mesh(rightGeometry, material);
+        right.position.set(0.25, 0.2, 0);
+        right.castShadow = true;
+        right.receiveShadow = true;
+        candleGroup.add(right);
         
         // Middle horizontal bar
-        const middleBarGeometry = new THREE.BoxGeometry(0.5, 0.12, 0.12);
-        const middleBar = new THREE.Mesh(middleBarGeometry, material);
-        middleBar.position.set(-0.05, 0.06, 0);
-        middleBar.castShadow = true;
-        middleBar.receiveShadow = true;
-        candleGroup.add(middleBar);
+        const middleGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const middle = new THREE.Mesh(middleGeometry, material);
+        middle.position.set(0, 0, 0);
+        middle.castShadow = true;
+        middle.receiveShadow = true;
+        candleGroup.add(middle);
         
-        // Right vertical bar (bottom part only)
-        const rightBarGeometry = new THREE.BoxGeometry(0.12, 0.36, 0.12);
-        const rightBar = new THREE.Mesh(rightBarGeometry, material);
-        rightBar.position.set(0.24, -0.24, 0);
-        rightBar.castShadow = true;
-        rightBar.receiveShadow = true;
-        candleGroup.add(rightBar);
+        // Left vertical bar (bottom)
+        const leftGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+        const left = new THREE.Mesh(leftGeometry, material);
+        left.position.set(-0.25, -0.3, 0);
+        left.castShadow = true;
+        left.receiveShadow = true;
+        candleGroup.add(left);
         
         // Bottom horizontal bar
-        const bottomBarGeometry = new THREE.BoxGeometry(0.6, 0.12, 0.12);
-        const bottomBar = new THREE.Mesh(bottomBarGeometry, material);
-        bottomBar.position.set(0, -0.54, 0);
-        bottomBar.castShadow = true;
-        bottomBar.receiveShadow = true;
-        candleGroup.add(bottomBar);
+        const bottomGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const bottom = new THREE.Mesh(bottomGeometry, material);
+        bottom.position.set(0, -0.5, 0);
+        bottom.castShadow = true;
+        bottom.receiveShadow = true;
+        candleGroup.add(bottom);
         
-        // Add rounded corners for better look
-        const cornerRadius = 0.06;
-        const cornerGeometry = new THREE.SphereGeometry(cornerRadius, 8, 8);
+        // Add corner connectors with borders to maintain seamless pink outline
+        const cornerRadius = 0.08;
         
-        // Top corners
-        const topLeftCorner = new THREE.Mesh(cornerGeometry, material);
-        topLeftCorner.position.set(-0.24, 0.54, 0);
-        topLeftCorner.castShadow = true;
-        topLeftCorner.receiveShadow = true;
-        candleGroup.add(topLeftCorner);
+        // Create corner positions
+        const cornerPositions = [
+          {x: 0.25, y: 0.5},   // Top right
+          {x: 0.25, y: 0},     // Middle right  
+          {x: -0.25, y: 0},    // Middle left
+          {x: -0.25, y: -0.5}  // Bottom left
+        ];
         
-        const topRightCorner = new THREE.Mesh(cornerGeometry, material);
-        topRightCorner.position.set(0.24, 0.54, 0);
-        topRightCorner.castShadow = true;
-        topRightCorner.receiveShadow = true;
-        candleGroup.add(topRightCorner);
+        cornerPositions.forEach(pos => {
+          // Pink border sphere (larger)
+          const borderGeometry = new THREE.SphereGeometry(cornerRadius * 1.1, 8, 8);
+          const borderMaterial = new THREE.MeshLambertMaterial({ 
+            color: 0xd91e77, // Deep pink border
+            flatShading: false
+          });
+          const borderSphere = new THREE.Mesh(borderGeometry, borderMaterial);
+          borderSphere.position.set(pos.x, pos.y, 0);
+          borderSphere.scale.set(1.0, 0.8, 0.9);
+          borderSphere.castShadow = true;
+          borderSphere.receiveShadow = true;
+          candleGroup.add(borderSphere);
+          
+          // Yellow core sphere (smaller, on top)
+          const coreGeometry = new THREE.SphereGeometry(cornerRadius, 8, 8);
+          const coreSphere = new THREE.Mesh(coreGeometry, material);
+          coreSphere.position.set(pos.x, pos.y, 0);
+          coreSphere.scale.set(1.0, 0.8, 1.0);
+          coreSphere.castShadow = true;
+          coreSphere.receiveShadow = true;
+          candleGroup.add(coreSphere);
+        });
         
-        // Bottom corners
-        const bottomLeftCorner = new THREE.Mesh(cornerGeometry, material);
-        bottomLeftCorner.position.set(-0.24, -0.54, 0);
-        bottomLeftCorner.castShadow = true;
-        bottomLeftCorner.receiveShadow = true;
-        candleGroup.add(bottomLeftCorner);
+      } else if (number === 5) {
+        // Create number "5" with simple, clean design
         
-        const bottomRightCorner = new THREE.Mesh(cornerGeometry, material);
-        bottomRightCorner.position.set(0.24, -0.54, 0);
-        bottomRightCorner.castShadow = true;
-        bottomRightCorner.receiveShadow = true;
-        candleGroup.add(bottomRightCorner);
+        // Top horizontal bar
+        const topGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const top = new THREE.Mesh(topGeometry, material);
+        top.position.set(0, 0.5, 0);
+        top.castShadow = true;
+        top.receiveShadow = true;
+        candleGroup.add(top);
+        
+        // Left vertical bar (top)
+        const leftTopGeometry = new THREE.BoxGeometry(0.15, 0.25, 0.15);
+        const leftTop = new THREE.Mesh(leftTopGeometry, material);
+        leftTop.position.set(-0.25, 0.3, 0);
+        leftTop.castShadow = true;
+        leftTop.receiveShadow = true;
+        candleGroup.add(leftTop);
+        
+        // Middle horizontal bar
+        const middleGeometry = new THREE.BoxGeometry(0.4, 0.15, 0.15);
+        const middle = new THREE.Mesh(middleGeometry, material);
+        middle.position.set(-0.05, 0.15, 0);
+        middle.castShadow = true;
+        middle.receiveShadow = true;
+        candleGroup.add(middle);
+        
+        // Right vertical bar (bottom)
+        const rightGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+        const right = new THREE.Mesh(rightGeometry, material);
+        right.position.set(0.25, -0.2, 0);
+        right.castShadow = true;
+        right.receiveShadow = true;
+        candleGroup.add(right);
+        
+        // Bottom horizontal bar
+        const bottomGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const bottom = new THREE.Mesh(bottomGeometry, material);
+        bottom.position.set(0, -0.5, 0);
+        bottom.castShadow = true;
+        bottom.receiveShadow = true;
+        candleGroup.add(bottom);
+        
+        // Add corner connectors with borders to maintain seamless pink outline
+        const corner5Radius = 0.08;
+        
+        // Create corner positions for number 5
+        const corner5Positions = [
+          {x: -0.25, y: 0.5},    // Top left
+          {x: -0.25, y: 0.15},   // Middle left
+          {x: 0.125, y: 0.15},   // Middle right
+          {x: 0.25, y: -0.5}     // Bottom right
+        ];
+        
+        corner5Positions.forEach(pos => {
+          // Pink border sphere (larger)
+          const borderGeometry = new THREE.SphereGeometry(corner5Radius * 1.1, 8, 8);
+          const borderMaterial = new THREE.MeshLambertMaterial({ 
+            color: 0xd91e77, // Deep pink border
+            flatShading: false
+          });
+          const borderSphere = new THREE.Mesh(borderGeometry, borderMaterial);
+          borderSphere.position.set(pos.x, pos.y, 0);
+          borderSphere.scale.set(1.0, 0.8, 0.9);
+          borderSphere.castShadow = true;
+          borderSphere.receiveShadow = true;
+          candleGroup.add(borderSphere);
+          
+          // Yellow core sphere (smaller, on top)
+          const coreGeometry = new THREE.SphereGeometry(corner5Radius, 8, 8);
+          const coreSphere = new THREE.Mesh(coreGeometry, material);
+          coreSphere.position.set(pos.x, pos.y, 0);
+          coreSphere.scale.set(1.0, 0.8, 1.0);
+          coreSphere.castShadow = true;
+          coreSphere.receiveShadow = true;
+          candleGroup.add(coreSphere);
+        });
       }
       
       return candleGroup;
     }
 
-    // Create number candles for "25"
-    const candle2 = createNumberCandle(2, 0xff1493); // Deep pink number 2
-    candle2.position.set(-0.5, 2.3, 0); // Closer and lower
-    candle2.scale.set(1.0, 1.0, 1.0); // Normal size for clarity
+    // Create number candles for "25" with yellow body and red border like reference image
+    const candle2 = createNumberCandle(2, 0xffd700); // Bright yellow like reference
+    candle2.position.set(-0.5, 2.6, 0); // A bit higher for perfect visibility
+    candle2.scale.set(1.0, 1.0, 2.0); // Make it taller/thicker for better visibility
     candle2.castShadow = true;
     candle2.receiveShadow = true;
     cakeGroup.add(candle2);
     
-    const candle5 = createNumberCandle(5, 0x1e90ff); // Deep blue number 5
-    candle5.position.set(0.5, 2.3, 0); // Closer and lower
-    candle5.scale.set(1.0, 1.0, 1.0); // Normal size for clarity
+    // Add deep pink border for number 2
+    const candle2Border = createNumberCandle(2, 0xd91e77); // Deep pink border
+    candle2Border.position.set(-0.5, 2.6, 0);
+    candle2Border.scale.set(1.1, 1.1, 0.9); // Slightly larger for border effect
+    candle2Border.castShadow = true;
+    candle2Border.receiveShadow = true;
+    cakeGroup.add(candle2Border);
+    
+    // Move yellow candle in front of deep pink border
+    cakeGroup.remove(candle2);
+    cakeGroup.add(candle2);
+    
+    const candle5 = createNumberCandle(5, 0xffd700); // Bright yellow like reference
+    candle5.position.set(0.5, 2.6, 0); // A bit higher for perfect visibility
+    candle5.scale.set(1.0, 1.0, 2.0); // Make it taller/thicker for better visibility
     candle5.castShadow = true;
     candle5.receiveShadow = true;
+    cakeGroup.add(candle5);
+    
+    // Add deep pink border for number 5
+    const candle5Border = createNumberCandle(5, 0xd91e77); // Deep pink border
+    candle5Border.position.set(0.5, 2.6, 0);
+    candle5Border.scale.set(1.1, 1.1, 0.9); // Slightly larger for border effect
+    candle5Border.castShadow = true;
+    candle5Border.receiveShadow = true;
+    cakeGroup.add(candle5Border);
+    
+    // Move yellow candle in front of red border
+    cakeGroup.remove(candle5);
     cakeGroup.add(candle5);
     
     // Wicks for number candles
@@ -631,13 +684,13 @@
       flatShading: false
     });
     const wick2 = new THREE.Mesh(wick2Geometry, wickMaterial);
-    wick2.position.set(-0.5, 3.0, 0); // Updated position to match smaller candle2
+    wick2.position.set(-0.5, 3.3, 0); // Lowered a bit to be closer to numbers
     wick2.castShadow = true;
     wick2.receiveShadow = true;
     cakeGroup.add(wick2);
     
     const wick5 = new THREE.Mesh(wick2Geometry.clone(), wickMaterial);
-    wick5.position.set(0.5, 3.0, 0); // Updated position to match smaller candle5
+    wick5.position.set(0.5, 3.3, 0); // Lowered a bit to be closer to numbers
     wick5.castShadow = true;
     wick5.receiveShadow = true;
     cakeGroup.add(wick5);
@@ -720,23 +773,23 @@
     // Flame for number 2 candle
     const flameMaterial2Front = getFlameMaterial(true);
     const flame2Front = new THREE.Mesh(flameGeometry.clone(), flameMaterial2Front);
-    flame2Front.position.set(-0.5, 3.2, 0); // On top of wick2 (updated position)
+    flame2Front.position.set(-0.5, 3.5, 0); // Lowered to match wick position
     cakeGroup.add(flame2Front);
     
     const flameMaterial2Back = getFlameMaterial(false);
     const flame2Back = new THREE.Mesh(flameGeometry.clone(), flameMaterial2Back);
-    flame2Back.position.set(-0.5, 3.2, 0); // Same position as front flame
+    flame2Back.position.set(-0.5, 3.5, 0); // Same position as front flame
     cakeGroup.add(flame2Back);
     
     // Flame for number 5 candle
     const flameMaterial5Front = getFlameMaterial(true);
     const flame5Front = new THREE.Mesh(flameGeometry.clone(), flameMaterial5Front);
-    flame5Front.position.set(0.5, 3.2, 0); // On top of wick5 (updated position)
+    flame5Front.position.set(0.5, 3.5, 0); // Lowered to match wick position
     cakeGroup.add(flame5Front);
     
     const flameMaterial5Back = getFlameMaterial(false);
     const flame5Back = new THREE.Mesh(flameGeometry.clone(), flameMaterial5Back);
-    flame5Back.position.set(0.5, 3.2, 0); // Same position as front flame
+    flame5Back.position.set(0.5, 3.5, 0); // Same position as front flame
     cakeGroup.add(flame5Back);
     
     // Store flame references for control
