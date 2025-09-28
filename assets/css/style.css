@@ -51,14 +51,30 @@ body{
 .banner{ position:relative; margin:90px auto 10px; text-align:center; transform:translateY(-120%); opacity:0; transition:transform .9s cubic-bezier(.2,.9,.2,1.2), opacity .9s;}
 .banner.show{ transform:translateY(0); opacity:1; }
 .banner h1{ 
-  font-family: 'Comfortaa', 'Nunito', cursive;
-  font-size:44px; 
-  font-weight: 700;
-  letter-spacing:1.5px; 
+  font-family: 'Fredoka One', 'Comfortaa', cursive;
+  font-size:52px; 
+  font-weight: 400;
+  letter-spacing:3px; 
   margin:0; 
-  text-shadow:0 10px 24px rgba(0,0,0,.45);
-  line-height: 1.2;
+  line-height: 1.1;
   vertical-align: baseline;
+  background: linear-gradient(135deg, #ff6b9d, #ff8bb3, #ffa8c8, #ffb6e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(255,105,180,0.3);
+  filter: drop-shadow(0 2px 4px rgba(255,105,180,0.2));
+  transform: perspective(500px) rotateX(5deg);
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% {
+    filter: drop-shadow(0 2px 4px rgba(255,105,180,0.2)) brightness(1);
+  }
+  100% {
+    filter: drop-shadow(0 4px 12px rgba(255,105,180,0.4)) brightness(1.1);
+  }
 }
 
 /* Stage */
@@ -160,7 +176,11 @@ body{
 
 /* Small screens */
 @media (max-width:520px){
-  .banner h1{ font-size:32px }
+  .banner h1{ 
+    font-size:40px; 
+    letter-spacing:2px;
+    transform: perspective(300px) rotateX(3deg);
+  }
   .message p{ 
     font-size:18px; 
     line-height:1.5; 
