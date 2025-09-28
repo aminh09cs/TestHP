@@ -419,11 +419,11 @@
     plate.castShadow = true; // Plate should cast shadow
     cakeGroup.add(plate);
 
-    // Cake layers - Enhanced smooth geometry
+    // Cake layers - Warm cohesive palette to match golden candles
     const layers = [
-      { radius: 4, height: 1.6, color: 0xffb3e6, y: -1.3 }, // Pink bottom
-      { radius: 3.2, height: 1.4, color: 0x81d4fa, y: 0.1 },  // Blue middle  
-      { radius: 2.5, height: 1.2, color: 0xa5d6a7, y: 1.3 }  // Green top
+      { radius: 4, height: 1.6, color: 0xffd1b3, y: -1.3 }, // Warm peach bottom
+      { radius: 3.2, height: 1.4, color: 0xffe0b3, y: 0.1 },  // Soft cream middle  
+      { radius: 2.5, height: 1.2, color: 0xfff2d1, y: 1.3 }  // Light vanilla top
     ];
 
     layers.forEach((layer, index) => {
