@@ -470,41 +470,177 @@
     });
 
 
-    // Realistic candle with melted wax base
-    const candleGeometry = new THREE.CylinderGeometry(0.12, 0.12, 1.5, 32);
-    const candleMaterial = new THREE.MeshLambertMaterial({ 
-      color: 0xff6b9d, // Pink candle (back to original)
-      flatShading: false
-    });
-    const candle = new THREE.Mesh(candleGeometry, candleMaterial);
-    candle.position.y = 2.45;
-    candle.castShadow = true;
-    candle.receiveShadow = true;
-    cakeGroup.add(candle);
+    // Function to create smooth curved number candle shape
+    function createNumberCandle(number, color) {
+      const candleGroup = new THREE.Group();
+      const material = new THREE.MeshLambertMaterial({ 
+        color: color,
+        flatShading: false
+      });
+      
+      if (number === 2) {
+        // Create proper number "2" shape with cleaner geometry
+        
+        // Top curved part using torus
+        const topCurveGeometry = new THREE.TorusGeometry(0.2, 0.06, 8, 16, Math.PI);
+        const topCurve = new THREE.Mesh(topCurveGeometry, material);
+        topCurve.position.set(0, 0.4, 0);
+        topCurve.rotation.z = Math.PI;
+        topCurve.castShadow = true;
+        topCurve.receiveShadow = true;
+        candleGroup.add(topCurve);
+        
+        // Right vertical part
+        const rightBarGeometry = new THREE.BoxGeometry(0.12, 0.25, 0.12);
+        const rightBar = new THREE.Mesh(rightBarGeometry, material);
+        rightBar.position.set(0.2, 0.15, 0);
+        rightBar.castShadow = true;
+        rightBar.receiveShadow = true;
+        candleGroup.add(rightBar);
+        
+        // Diagonal part
+        const diagonalGeometry = new THREE.BoxGeometry(0.12, 0.5, 0.12);
+        const diagonal = new THREE.Mesh(diagonalGeometry, material);
+        diagonal.position.set(-0.05, -0.1, 0);
+        diagonal.rotation.z = -Math.PI / 4;
+        diagonal.castShadow = true;
+        diagonal.receiveShadow = true;
+        candleGroup.add(diagonal);
+        
+        // Bottom horizontal bar
+        const bottomBarGeometry = new THREE.BoxGeometry(0.6, 0.12, 0.12);
+        const bottomBar = new THREE.Mesh(bottomBarGeometry, material);
+        bottomBar.position.set(0, -0.54, 0);
+        bottomBar.castShadow = true;
+        bottomBar.receiveShadow = true;
+        candleGroup.add(bottomBar);
+        
+        // Add rounded corners
+        const cornerRadius = 0.06;
+        const cornerGeometry = new THREE.SphereGeometry(cornerRadius, 8, 8);
+        
+        // Bottom corners
+        const bottomLeftCorner = new THREE.Mesh(cornerGeometry, material);
+        bottomLeftCorner.position.set(-0.24, -0.54, 0);
+        bottomLeftCorner.castShadow = true;
+        bottomLeftCorner.receiveShadow = true;
+        candleGroup.add(bottomLeftCorner);
+        
+        const bottomRightCorner = new THREE.Mesh(cornerGeometry, material);
+        bottomRightCorner.position.set(0.24, -0.54, 0);
+        bottomRightCorner.castShadow = true;
+        bottomRightCorner.receiveShadow = true;
+        candleGroup.add(bottomRightCorner);
+        
+      } else if (number === 5) {
+        // Create proper number "5" shape like the reference image
+        
+        // Top horizontal bar
+        const topBarGeometry = new THREE.BoxGeometry(0.6, 0.12, 0.12);
+        const topBar = new THREE.Mesh(topBarGeometry, material);
+        topBar.position.set(0, 0.54, 0);
+        topBar.castShadow = true;
+        topBar.receiveShadow = true;
+        candleGroup.add(topBar);
+        
+        // Left vertical bar (top part only)
+        const leftBarGeometry = new THREE.BoxGeometry(0.12, 0.36, 0.12);
+        const leftBar = new THREE.Mesh(leftBarGeometry, material);
+        leftBar.position.set(-0.24, 0.3, 0);
+        leftBar.castShadow = true;
+        leftBar.receiveShadow = true;
+        candleGroup.add(leftBar);
+        
+        // Middle horizontal bar
+        const middleBarGeometry = new THREE.BoxGeometry(0.5, 0.12, 0.12);
+        const middleBar = new THREE.Mesh(middleBarGeometry, material);
+        middleBar.position.set(-0.05, 0.06, 0);
+        middleBar.castShadow = true;
+        middleBar.receiveShadow = true;
+        candleGroup.add(middleBar);
+        
+        // Right vertical bar (bottom part only)
+        const rightBarGeometry = new THREE.BoxGeometry(0.12, 0.36, 0.12);
+        const rightBar = new THREE.Mesh(rightBarGeometry, material);
+        rightBar.position.set(0.24, -0.24, 0);
+        rightBar.castShadow = true;
+        rightBar.receiveShadow = true;
+        candleGroup.add(rightBar);
+        
+        // Bottom horizontal bar
+        const bottomBarGeometry = new THREE.BoxGeometry(0.6, 0.12, 0.12);
+        const bottomBar = new THREE.Mesh(bottomBarGeometry, material);
+        bottomBar.position.set(0, -0.54, 0);
+        bottomBar.castShadow = true;
+        bottomBar.receiveShadow = true;
+        candleGroup.add(bottomBar);
+        
+        // Add rounded corners for better look
+        const cornerRadius = 0.06;
+        const cornerGeometry = new THREE.SphereGeometry(cornerRadius, 8, 8);
+        
+        // Top corners
+        const topLeftCorner = new THREE.Mesh(cornerGeometry, material);
+        topLeftCorner.position.set(-0.24, 0.54, 0);
+        topLeftCorner.castShadow = true;
+        topLeftCorner.receiveShadow = true;
+        candleGroup.add(topLeftCorner);
+        
+        const topRightCorner = new THREE.Mesh(cornerGeometry, material);
+        topRightCorner.position.set(0.24, 0.54, 0);
+        topRightCorner.castShadow = true;
+        topRightCorner.receiveShadow = true;
+        candleGroup.add(topRightCorner);
+        
+        // Bottom corners
+        const bottomLeftCorner = new THREE.Mesh(cornerGeometry, material);
+        bottomLeftCorner.position.set(-0.24, -0.54, 0);
+        bottomLeftCorner.castShadow = true;
+        bottomLeftCorner.receiveShadow = true;
+        candleGroup.add(bottomLeftCorner);
+        
+        const bottomRightCorner = new THREE.Mesh(cornerGeometry, material);
+        bottomRightCorner.position.set(0.24, -0.54, 0);
+        bottomRightCorner.castShadow = true;
+        bottomRightCorner.receiveShadow = true;
+        candleGroup.add(bottomRightCorner);
+      }
+      
+      return candleGroup;
+    }
+
+    // Create number candles for "25"
+    const candle2 = createNumberCandle(2, 0xff1493); // Deep pink number 2
+    candle2.position.set(-0.5, 2.3, 0); // Closer and lower
+    candle2.scale.set(1.0, 1.0, 1.0); // Normal size for clarity
+    candle2.castShadow = true;
+    candle2.receiveShadow = true;
+    cakeGroup.add(candle2);
     
-    // Melted wax pool at base of candle - curved like real wax
-    const waxGeometry = new THREE.CylinderGeometry(0.15, 0.18, 0.3, 32);
-    const waxMaterial = new THREE.MeshLambertMaterial({ 
-      color: 0xffeb3b, // Yellow wax (back to original)
-      flatShading: false
-    });
-    const wax = new THREE.Mesh(waxGeometry, waxMaterial);
-    wax.position.y = 1.8;
-    wax.castShadow = true;
-    wax.receiveShadow = true;
-    cakeGroup.add(wax);
+    const candle5 = createNumberCandle(5, 0x1e90ff); // Deep blue number 5
+    candle5.position.set(0.5, 2.3, 0); // Closer and lower
+    candle5.scale.set(1.0, 1.0, 1.0); // Normal size for clarity
+    candle5.castShadow = true;
+    candle5.receiveShadow = true;
+    cakeGroup.add(candle5);
     
-    // Candle wick (râu nến) - connecting candle to flame
-    const wickGeometry = new THREE.CylinderGeometry(0.015, 0.015, 0.2, 8);
+    // Wicks for number candles
+    const wick2Geometry = new THREE.CylinderGeometry(0.02, 0.02, 0.18, 8);
     const wickMaterial = new THREE.MeshLambertMaterial({ 
-      color: 0x000000, // Pure black
+      color: 0x000000,
       flatShading: false
     });
-    const wick = new THREE.Mesh(wickGeometry, wickMaterial);
-    wick.position.y = 3.25; // Back to original position
-    wick.castShadow = true;
-    wick.receiveShadow = true;
-    cakeGroup.add(wick);
+    const wick2 = new THREE.Mesh(wick2Geometry, wickMaterial);
+    wick2.position.set(-0.5, 3.0, 0); // Updated position to match smaller candle2
+    wick2.castShadow = true;
+    wick2.receiveShadow = true;
+    cakeGroup.add(wick2);
+    
+    const wick5 = new THREE.Mesh(wick2Geometry.clone(), wickMaterial);
+    wick5.position.set(0.5, 3.0, 0); // Updated position to match smaller candle5
+    wick5.castShadow = true;
+    wick5.receiveShadow = true;
+    cakeGroup.add(wick5);
 
     // Shader-based realistic flame
     function getFlameMaterial(isFrontSide) {
@@ -577,22 +713,36 @@
       });
     }
 
-    // Create flame with shader - positioned right on top of wick
+    // Create flames for number candles
     const flameGeometry = new THREE.SphereGeometry(0.12, 32, 32);
     flameGeometry.translate(0, 0.1, 0); // Flame starts from wick base
     
-    const flameMaterial = getFlameMaterial(true);
-    const flame = new THREE.Mesh(flameGeometry, flameMaterial);
-    flame.position.set(0, 3.25, 0); // Lower to meet wick top
-    flame.rotation.y = 0; // No rotation for centered flame
-    cakeGroup.add(flame);
+    // Flame for number 2 candle
+    const flameMaterial2Front = getFlameMaterial(true);
+    const flame2Front = new THREE.Mesh(flameGeometry.clone(), flameMaterial2Front);
+    flame2Front.position.set(-0.5, 3.2, 0); // On top of wick2 (updated position)
+    cakeGroup.add(flame2Front);
     
-    // Add second flame for double-sided effect
-    const flameMaterial2 = getFlameMaterial(false);
-    const flame2 = new THREE.Mesh(flameGeometry, flameMaterial2);
-    flame2.position.set(0, 3.25, 0); // Same position as first flame
-    flame2.rotation.y = 0; // No rotation for centered flame
-    cakeGroup.add(flame2);
+    const flameMaterial2Back = getFlameMaterial(false);
+    const flame2Back = new THREE.Mesh(flameGeometry.clone(), flameMaterial2Back);
+    flame2Back.position.set(-0.5, 3.2, 0); // Same position as front flame
+    cakeGroup.add(flame2Back);
+    
+    // Flame for number 5 candle
+    const flameMaterial5Front = getFlameMaterial(true);
+    const flame5Front = new THREE.Mesh(flameGeometry.clone(), flameMaterial5Front);
+    flame5Front.position.set(0.5, 3.2, 0); // On top of wick5 (updated position)
+    cakeGroup.add(flame5Front);
+    
+    const flameMaterial5Back = getFlameMaterial(false);
+    const flame5Back = new THREE.Mesh(flameGeometry.clone(), flameMaterial5Back);
+    flame5Back.position.set(0.5, 3.2, 0); // Same position as front flame
+    cakeGroup.add(flame5Back);
+    
+    // Store flame references for control
+    const flames = {
+      flame2Front, flame2Back, flame5Front, flame5Back
+    };
 
     // Function to create a realistic frosting swirl
     function createFrostingSwirl() {
@@ -802,41 +952,46 @@
       }
     }
 
-    // Add "Trang & Trinh" text on top of the cake
-    const textGeometry = new THREE.PlaneGeometry(3, 0.8);
+    // Add "Trang & Trinh" text on bottom tier of the cake
+    const textGeometry = new THREE.PlaneGeometry(3.5, 0.8);
     const textMaterial = new THREE.MeshBasicMaterial({ 
-      color: 0xff6b9d,
+      color: 0xffffff,
       transparent: true,
-      opacity: 0.9,
+      opacity: 1.0,
       side: THREE.DoubleSide
     });
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    textMesh.position.y = 2.3; // Position
-    textMesh.position.z = 0.5; // Slightly in front
-    textMesh.rotation.x = -Math.PI / 6; // Slight tilt for better visibility
+    textMesh.position.y = -0.7; // Lower position on bottom tier
+    textMesh.position.z = 4.0; // Slightly closer
+    textMesh.rotation.x = 0; // No tilt for better readability
     cakeGroup.add(textMesh);
 
     // Create high-resolution text texture with "Trang & Trinh"
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-    canvas.width = 1024; // Higher resolution
-    canvas.height = 256;
+    canvas.width = 800; // Smaller resolution for smaller card
+    canvas.height = 200; // Smaller height
     
-    // Set pink background
-    context.fillStyle = 'rgba(255, 107, 157, 0.9)';
+    // Set white background for better visibility
+    context.fillStyle = 'rgba(255, 255, 255, 0.95)';
     context.fillRect(0, 0, canvas.width, canvas.height);
     
+    // Add pink border
+    context.strokeStyle = 'rgba(255, 107, 157, 1.0)';
+    context.lineWidth = 6;
+    context.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+    
     // Set text style with maximum sharpness
-    context.fillStyle = '#000000'; // Black text for contrast
-    context.font = 'bold 96px Arial, sans-serif'; // Larger font
+    context.fillStyle = '#FF6B9D'; // Pink text for contrast
+    context.font = 'bold 80px Arial, sans-serif'; // Smaller font for smaller card
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     
-    // Add white text shadow for black text on pink background
-    context.shadowColor = 'rgba(255, 255, 255, 0.8)';
-    context.shadowBlur = 6;
-    context.shadowOffsetX = 2;
-    context.shadowOffsetY = 2;
+    // Add dark shadow for pink text on white background
+    context.shadowColor = 'rgba(0, 0, 0, 0.3)';
+    context.shadowBlur = 4;
+    context.shadowOffsetX = 3;
+    context.shadowOffsetY = 3;
     
     // Draw text
     context.fillText('Trang & Trinh', canvas.width / 2, canvas.height / 2);
@@ -928,20 +1083,26 @@
         frosting.rotation.y += 0.0008; // Very slow rotation
       });
 
-      // Shader flame animation
+      // Shader flame animation for number candles
       const time = Date.now() * 0.001;
-      if (flame.material.uniforms) {
-        flame.material.uniforms.time.value = time;
+      if (flame2Front.material.uniforms) {
+        flame2Front.material.uniforms.time.value = time;
       }
-      if (flame2.material.uniforms) {
-        flame2.material.uniforms.time.value = time;
+      if (flame2Back.material.uniforms) {
+        flame2Back.material.uniforms.time.value = time;
+      }
+      if (flame5Front.material.uniforms) {
+        flame5Front.material.uniforms.time.value = time;
+      }
+      if (flame5Back.material.uniforms) {
+        flame5Back.material.uniforms.time.value = time;
       }
 
       renderer.render(scene, camera);
     }
     animate();
 
-    // Enhanced smoke effect for blown candle
+    // Enhanced smoke effect for blown candles
     function createSmokeEffect() {
       const smokeGeometry = new THREE.SphereGeometry(0.05, 8, 8);
       const smokeMaterial = new THREE.MeshBasicMaterial({ 
@@ -951,14 +1112,29 @@
       });
       
       const smokeParticles = [];
-      for (let i = 0; i < 8; i++) {
-        const smoke = new THREE.Mesh(smokeGeometry, smokeMaterial);
+      
+      // Create smoke for candle 2 (left)
+      for (let i = 0; i < 6; i++) {
+        const smoke = new THREE.Mesh(smokeGeometry, smokeMaterial.clone());
         smoke.position.set(
-          (Math.random() - 0.5) * 0.1,
-          3.3 + Math.random() * 0.2,
+          -0.5 + (Math.random() - 0.5) * 0.1, // Updated position
+          3.3 + Math.random() * 0.2, // Lower position
           (Math.random() - 0.5) * 0.1
         );
-        smoke.scale.setScalar(0.5 + Math.random() * 0.5);
+        smoke.scale.setScalar(0.4 + Math.random() * 0.4);
+        smokeParticles.push(smoke);
+        cakeGroup.add(smoke);
+      }
+      
+      // Create smoke for candle 5 (right)
+      for (let i = 0; i < 6; i++) {
+        const smoke = new THREE.Mesh(smokeGeometry, smokeMaterial.clone());
+        smoke.position.set(
+          0.5 + (Math.random() - 0.5) * 0.1, // Updated position
+          3.3 + Math.random() * 0.2, // Lower position
+          (Math.random() - 0.5) * 0.1
+        );
+        smoke.scale.setScalar(0.4 + Math.random() * 0.4);
         smokeParticles.push(smoke);
         cakeGroup.add(smoke);
       }
@@ -969,15 +1145,20 @@
     // Return control functions
     return {
       showFlame: () => {
-        flame.visible = true;
-        flame2.visible = true;
+        flame2Front.visible = true;
+        flame2Back.visible = true;
+        flame5Front.visible = true;
+        flame5Back.visible = true;
       },
       hideFlame: () => {
-        flame.visible = false;
-        flame2.visible = false;
+        flame2Front.visible = false;
+        flame2Back.visible = false;
+        flame5Front.visible = false;
+        flame5Back.visible = false;
       },
       createSmoke: createSmokeEffect,
-      group: cakeGroup
+      group: cakeGroup,
+      flames: flames
     };
   }
 
