@@ -57,7 +57,16 @@
     { label: 'Balloons', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
     { label: 'Bring cake', run: () => { cake.classList.add('show'); setTimeout(() => cake.classList.add('lit'), 500); } },
     { label: 'Blow candle', run: () => { cake.classList.add('blow'); setTimeout(() => cake.classList.remove('lit'), 50); } },
-    { label: 'Happy Birthday', run: () => { message.classList.add('show'); triggerConfetti(); hideButtonsAfterFinal(); } },
+    { label: 'Happy Birthday', run: () => { 
+      message.classList.add('show'); 
+      // Show photo frames with slight delay for better effect
+      setTimeout(() => {
+        const photoFrames = document.getElementById('photoFrames');
+        if (photoFrames) photoFrames.classList.add('show');
+      }, 500);
+      triggerConfetti(); 
+      hideButtonsAfterFinal(); 
+    } },
   ];
   let currentStepIndex = 0;
 
@@ -1581,7 +1590,16 @@
       }
       setTimeout(() => cake.classList.remove('lit'), 50); 
     }},
-    { label: 'Happy Birthday', run: () => { message.classList.add('show'); triggerConfetti(); hideButtonsAfterFinal(); } },
+    { label: 'Happy Birthday', run: () => { 
+      message.classList.add('show'); 
+      // Show photo frames with slight delay for better effect
+      setTimeout(() => {
+        const photoFrames = document.getElementById('photoFrames');
+        if (photoFrames) photoFrames.classList.add('show');
+      }, 500);
+      triggerConfetti(); 
+      hideButtonsAfterFinal(); 
+    } },
   ];
 
   // Update steps array
