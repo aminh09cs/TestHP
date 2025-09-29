@@ -1152,7 +1152,7 @@
         const frosting = createFrostingSwirl();
         frosting.position.x = Math.cos(angle) * radius;
         frosting.position.z = Math.sin(angle) * radius;
-        frosting.position.y = -0.5; // Much lower position, very close to cake surface
+        frosting.position.y = -0.35; // Lower position, closer to middle tier surface
         
         // Add slight random variation
         frosting.position.x += (Math.random() - 0.5) * 0.1;
@@ -1197,7 +1197,7 @@
         const frosting = createFrostingSwirl();
         frosting.position.x = Math.cos(angle) * radius;
         frosting.position.z = Math.sin(angle) * radius;
-        frosting.position.y = -1.3; // Same position as cherry
+        frosting.position.y = -1.55; // Lower position, closer to bottom tier surface
         
         // Add slight random variation
         frosting.position.x += (Math.random() - 0.5) * 0.15;
@@ -1265,6 +1265,51 @@
     textMaterial.map = textTexture;
     textMaterial.transparent = true;
     textMaterial.opacity = 0.95;
+
+    // Add decorations for tier 3 (top tier) - cherries and frosting
+    const tier3Cherries = [];
+    const tier3Frosting = [];
+    const tier3TotalCount = 16; // Total decorations (8 cherries + 8 frosting) - appropriate for smaller top tier
+    
+    for (let i = 0; i < tier3TotalCount; i++) {
+      const angle = (i / tier3TotalCount) * Math.PI * 2; // Evenly spaced around the circle
+      const radius = 2.5 + 0.2; // Slightly outside the top tier radius
+      
+      if (i % 2 === 0) {
+        // Add cherry every other position
+        const cherry = createCherry();
+        cherry.position.x = Math.cos(angle) * radius;
+        cherry.position.z = Math.sin(angle) * radius;
+        cherry.position.y = 1.2; // Lower position, closer to top tier surface
+        
+        // Add slight random variation for natural look
+        cherry.position.x += (Math.random() - 0.5) * 0.1;
+        cherry.position.z += (Math.random() - 0.5) * 0.1;
+        cherry.position.y += (Math.random() - 0.5) * 0.05;
+        
+        // Random rotation for variety
+        cherry.rotation.y = Math.random() * Math.PI * 2;
+        
+        tier3Cherries.push(cherry);
+        cakeGroup.add(cherry);
+      } else {
+        // Add frosting every other position
+        const frosting = createFrostingSwirl();
+        frosting.position.x = Math.cos(angle) * radius;
+        frosting.position.z = Math.sin(angle) * radius;
+        frosting.position.y = 1; // Much lower position, very close to top tier surface
+        
+        // Add slight random variation
+        frosting.position.x += (Math.random() - 0.5) * 0.08;
+        frosting.position.z += (Math.random() - 0.5) * 0.08;
+        frosting.position.y += (Math.random() - 0.5) * 0.03;
+        
+        frosting.castShadow = true;
+        frosting.receiveShadow = true;
+        tier3Frosting.push(frosting);
+        cakeGroup.add(frosting);
+      }
+    }
 
     // Add 4 cute gift boxes on top tier near number "25"
     const topTierGifts = [];
@@ -1355,7 +1400,7 @@
 
       // Animate frosting dots with gentle bobbing motion
       tier2Frosting.forEach((frosting, i) => {
-        frosting.position.y = -0.15 + Math.sin(Date.now() * 0.0008 + i * 0.4) * 0.015; // Gentle bobbing
+        frosting.position.y = -0.35 + Math.sin(Date.now() * 0.0008 + i * 0.4) * 0.015; // Gentle bobbing
         frosting.rotation.y += 0.001; // Very slow rotation
       });
 
@@ -1368,8 +1413,21 @@
 
       // Animate tier 1 frosting with gentle bobbing motion
       tier1Frosting.forEach((frosting, i) => {
-        frosting.position.y = -1.3 + Math.sin(Date.now() * 0.0006 + i * 0.3) * 0.02; // Gentle bobbing
+        frosting.position.y = -1.55 + Math.sin(Date.now() * 0.0006 + i * 0.3) * 0.02; // Gentle bobbing
         frosting.rotation.y += 0.0008; // Very slow rotation
+      });
+
+      // Animate tier 3 cherries with individual gentle motions
+      tier3Cherries.forEach((cherry, i) => {
+        cherry.rotation.y += 0.0018 + (i * 0.0002); // Slightly different rotation speeds
+        cherry.position.y = 1.2 + Math.sin(Date.now() * 0.0009 + i * 0.5) * 0.02; // Gentle up-down motion
+        cherry.rotation.z = Math.sin(Date.now() * 0.0011 + i * 0.3) * 0.035; // Gentle swaying
+      });
+
+      // Animate tier 3 frosting with gentle bobbing motion
+      tier3Frosting.forEach((frosting, i) => {
+        frosting.position.y = 1 + Math.sin(Date.now() * 0.0007 + i * 0.4) * 0.018; // Gentle bobbing
+        frosting.rotation.y += 0.0009; // Very slow rotation
       });
 
       // Animate top tier gift boxes with individual gentle motions
