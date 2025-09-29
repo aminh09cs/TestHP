@@ -49,7 +49,11 @@ body{
 
 /* Banner */
 .banner{ position:relative; margin:90px auto 10px; text-align:center; transform:translateY(-120%); opacity:0; transition:transform .9s cubic-bezier(.2,.9,.2,1.2), opacity .9s;}
-.banner.show{ transform:translateY(0); opacity:1; }
+.banner.show{ 
+  transform:translateY(0); 
+  opacity:1;
+  animation: happyBirthdayPulse 1.5s ease-in-out infinite;
+}
 .banner h1{ 
   font-family: 'Fredoka One', 'Comfortaa', cursive;
   font-size:52px; 
@@ -61,6 +65,7 @@ body{
   background: linear-gradient(135deg, #ff6b9d, #ff8bb3, #ffa8c8, #ffb6e1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  transform-origin: center center;
   background-clip: text;
   text-shadow: 0 4px 8px rgba(255,105,180,0.3);
   filter: drop-shadow(0 2px 4px rgba(255,105,180,0.2));
@@ -187,6 +192,13 @@ body{
     letter-spacing: 0.1px;
   }
   .balloon{ font-size:34px }
+}
+
+/* Happy Birthday Pulse Animation */
+@keyframes happyBirthdayPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 /* Utils */
