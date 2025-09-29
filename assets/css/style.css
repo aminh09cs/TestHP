@@ -29,7 +29,7 @@ body{
 }
 
 /* Fullscreen background canvas */
-.bg-stars{ position:fixed; inset:0; z-index:0; background:linear-gradient(180deg, #fff5fa 0%, #ffeaf4 60%, #ffe4f2 100%); }
+.bg-stars{ position:fixed; inset:0; z-index:0; background:linear-gradient(180deg, #ffeef6 0%, #ffd1e3 50%, #ffb3d9 100%); }
 .confetti-canvas{ position:fixed; inset:0; z-index:20; pointer-events:none }
 
 /* Lights - SVG garland */
@@ -57,7 +57,7 @@ body{
 .banner h1{ 
   font-family: 'Fredoka One', 'Comfortaa', cursive;
   font-size:52px; 
-  font-weight: 400;
+  font-weight: 800;
   letter-spacing:3px; 
   margin:0; 
   line-height: 1.1;
@@ -66,11 +66,8 @@ body{
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transform-origin: center center;
-  background-clip: text;
-  text-shadow: 0 4px 8px rgba(255,105,180,0.3);
-  filter: drop-shadow(0 2px 4px rgba(255,105,180,0.2));
-  transform: perspective(500px) rotateX(5deg);
-  animation: titleGlow 3s ease-in-out infinite alternate;
+  text-shadow: 0 2px 4px rgba(255, 107, 157, 0.2);
+  filter: drop-shadow(0 1px 2px rgba(255, 107, 157, 0.1));
 }
 
 @keyframes titleGlow {
@@ -116,7 +113,7 @@ body{
 .message{ position:relative; margin:-8px auto 10px; text-align:center; opacity:0; transform:translateY(-8px); transition:opacity .6s, transform .6s; max-width:760px; padding:0 16px; }
 .message.show{ opacity:1; transform:translateY(0) }
 .message p{ 
-  color:var(--muted); 
+  color: #D946EF; 
   font-size:20px; 
   line-height:1.6; 
   font-weight: 500;
