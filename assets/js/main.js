@@ -675,7 +675,7 @@
     });
 
 
-    // Function to create clean number candle shapes
+    // Function to create seamless number candle shapes using simple BoxGeometry
     function createNumberCandle(number, color) {
       const candleGroup = new THREE.Group();
       const material = new THREE.MeshLambertMaterial({ 
@@ -684,18 +684,19 @@
       });
       
       if (number === 2) {
-        // Create number "2" with simple, clean design
+        // Create number "2" with correct shape (no back connection)
+        const thickness = 0.15;
         
         // Top horizontal bar
-        const topGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const topGeometry = new THREE.BoxGeometry(0.5, 0.15, thickness);
         const top = new THREE.Mesh(topGeometry, material);
         top.position.set(0, 0.5, 0);
         top.castShadow = true;
         top.receiveShadow = true;
         candleGroup.add(top);
         
-        // Right vertical bar
-        const rightGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+        // Right vertical bar (from top to middle only)
+        const rightGeometry = new THREE.BoxGeometry(0.15, 0.4, thickness);
         const right = new THREE.Mesh(rightGeometry, material);
         right.position.set(0.25, 0.2, 0);
         right.castShadow = true;
@@ -703,15 +704,15 @@
         candleGroup.add(right);
         
         // Middle horizontal bar
-        const middleGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const middleGeometry = new THREE.BoxGeometry(0.5, 0.15, thickness);
         const middle = new THREE.Mesh(middleGeometry, material);
         middle.position.set(0, 0, 0);
         middle.castShadow = true;
         middle.receiveShadow = true;
         candleGroup.add(middle);
         
-        // Left vertical bar (bottom)
-        const leftGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+        // Left vertical bar (from middle to bottom only)
+        const leftGeometry = new THREE.BoxGeometry(0.15, 0.4, thickness);
         const left = new THREE.Mesh(leftGeometry, material);
         left.position.set(-0.25, -0.3, 0);
         left.castShadow = true;
@@ -719,125 +720,56 @@
         candleGroup.add(left);
         
         // Bottom horizontal bar
-        const bottomGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const bottomGeometry = new THREE.BoxGeometry(0.5, 0.15, thickness);
         const bottom = new THREE.Mesh(bottomGeometry, material);
         bottom.position.set(0, -0.5, 0);
         bottom.castShadow = true;
         bottom.receiveShadow = true;
         candleGroup.add(bottom);
         
-        // Add corner connectors with borders to maintain seamless pink outline
-        const cornerRadius = 0.08;
-        
-        // Create corner positions
-        const cornerPositions = [
-          {x: 0.25, y: 0.5},   // Top right
-          {x: 0.25, y: 0},     // Middle right  
-          {x: -0.25, y: 0},    // Middle left
-          {x: -0.25, y: -0.5}  // Bottom left
-        ];
-        
-        cornerPositions.forEach(pos => {
-          // Pink border sphere (larger)
-          const borderGeometry = new THREE.SphereGeometry(cornerRadius * 1.1, 8, 8);
-          const borderMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0xd91e77, // Deep pink border
-            flatShading: false
-          });
-          const borderSphere = new THREE.Mesh(borderGeometry, borderMaterial);
-          borderSphere.position.set(pos.x, pos.y, 0);
-          borderSphere.scale.set(1.0, 0.8, 0.9);
-          borderSphere.castShadow = true;
-          borderSphere.receiveShadow = true;
-          candleGroup.add(borderSphere);
-          
-          // Yellow core sphere (smaller, on top)
-          const coreGeometry = new THREE.SphereGeometry(cornerRadius, 8, 8);
-          const coreSphere = new THREE.Mesh(coreGeometry, material);
-          coreSphere.position.set(pos.x, pos.y, 0);
-          coreSphere.scale.set(1.0, 0.8, 1.0);
-          coreSphere.castShadow = true;
-          coreSphere.receiveShadow = true;
-          candleGroup.add(coreSphere);
-        });
-        
       } else if (number === 5) {
-        // Create number "5" with simple, clean design
+        // Create number "5" with perfect joints
+        const thickness = 0.15;
         
         // Top horizontal bar
-        const topGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const topGeometry = new THREE.BoxGeometry(0.5, 0.15, thickness);
         const top = new THREE.Mesh(topGeometry, material);
         top.position.set(0, 0.5, 0);
         top.castShadow = true;
         top.receiveShadow = true;
         candleGroup.add(top);
         
-        // Left vertical bar (top)
-        const leftTopGeometry = new THREE.BoxGeometry(0.15, 0.25, 0.15);
+        // Left vertical bar (from top to middle, overlaps top)
+        const leftTopGeometry = new THREE.BoxGeometry(0.15, 0.4, thickness);
         const leftTop = new THREE.Mesh(leftTopGeometry, material);
-        leftTop.position.set(-0.25, 0.3, 0);
+        leftTop.position.set(-0.25, 0.2, 0);
         leftTop.castShadow = true;
         leftTop.receiveShadow = true;
         candleGroup.add(leftTop);
         
-        // Middle horizontal bar
-        const middleGeometry = new THREE.BoxGeometry(0.4, 0.15, 0.15);
+        // Middle horizontal bar (overlaps left)
+        const middleGeometry = new THREE.BoxGeometry(0.5, 0.15, thickness);
         const middle = new THREE.Mesh(middleGeometry, material);
-        middle.position.set(-0.05, 0.15, 0);
+        middle.position.set(0, 0.15, 0);
         middle.castShadow = true;
         middle.receiveShadow = true;
         candleGroup.add(middle);
         
-        // Right vertical bar (bottom)
-        const rightGeometry = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+        // Right vertical bar (from middle to bottom, overlaps middle)
+        const rightGeometry = new THREE.BoxGeometry(0.15, 0.5, thickness);
         const right = new THREE.Mesh(rightGeometry, material);
-        right.position.set(0.25, -0.2, 0);
+        right.position.set(0.25, -0.125, 0);
         right.castShadow = true;
         right.receiveShadow = true;
         candleGroup.add(right);
         
         // Bottom horizontal bar
-        const bottomGeometry = new THREE.BoxGeometry(0.5, 0.15, 0.15);
+        const bottomGeometry = new THREE.BoxGeometry(0.5, 0.15, thickness);
         const bottom = new THREE.Mesh(bottomGeometry, material);
         bottom.position.set(0, -0.5, 0);
         bottom.castShadow = true;
         bottom.receiveShadow = true;
         candleGroup.add(bottom);
-        
-        // Add corner connectors with borders to maintain seamless pink outline
-        const corner5Radius = 0.08;
-        
-        // Create corner positions for number 5
-        const corner5Positions = [
-          {x: -0.25, y: 0.5},    // Top left
-          {x: -0.25, y: 0.15},   // Middle left
-          {x: 0.125, y: 0.15},   // Middle right
-          {x: 0.25, y: -0.5}     // Bottom right
-        ];
-        
-        corner5Positions.forEach(pos => {
-          // Pink border sphere (larger)
-          const borderGeometry = new THREE.SphereGeometry(corner5Radius * 1.1, 8, 8);
-          const borderMaterial = new THREE.MeshLambertMaterial({ 
-            color: 0xd91e77, // Deep pink border
-            flatShading: false
-          });
-          const borderSphere = new THREE.Mesh(borderGeometry, borderMaterial);
-          borderSphere.position.set(pos.x, pos.y, 0);
-          borderSphere.scale.set(1.0, 0.8, 0.9);
-          borderSphere.castShadow = true;
-          borderSphere.receiveShadow = true;
-          candleGroup.add(borderSphere);
-          
-          // Yellow core sphere (smaller, on top)
-          const coreGeometry = new THREE.SphereGeometry(corner5Radius, 8, 8);
-          const coreSphere = new THREE.Mesh(coreGeometry, material);
-          coreSphere.position.set(pos.x, pos.y, 0);
-          coreSphere.scale.set(1.0, 0.8, 1.0);
-          coreSphere.castShadow = true;
-          coreSphere.receiveShadow = true;
-          candleGroup.add(coreSphere);
-        });
       }
       
       return candleGroup;
@@ -1071,6 +1003,75 @@
       return frostingGroup;
     }
 
+    // Function to create a cute 3D gift box with pink ribbon
+    function createGiftBox() {
+      const giftGroup = new THREE.Group();
+      
+      // Gift box body - pink cube
+      const boxGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+      const boxMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0xffb6c1, // Light pink like the reference image
+        shininess: 20,
+        specular: 0x333333
+      });
+      const box = new THREE.Mesh(boxGeometry, boxMaterial);
+      box.castShadow = true;
+      box.receiveShadow = true;
+      giftGroup.add(box);
+      
+      // Ribbon - horizontal
+      const ribbonHGeometry = new THREE.BoxGeometry(0.45, 0.08, 0.45);
+      const ribbonMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0xff69b4, // Hot pink for ribbon
+        shininess: 60
+      });
+      const ribbonH = new THREE.Mesh(ribbonHGeometry, ribbonMaterial);
+      ribbonH.position.y = 0.05;
+      ribbonH.castShadow = true;
+      ribbonH.receiveShadow = true;
+      giftGroup.add(ribbonH);
+      
+      // Ribbon - vertical
+      const ribbonVGeometry = new THREE.BoxGeometry(0.08, 0.45, 0.45);
+      const ribbonV = new THREE.Mesh(ribbonVGeometry, ribbonMaterial);
+      ribbonV.position.y = 0.05;
+      ribbonV.castShadow = true;
+      ribbonV.receiveShadow = true;
+      giftGroup.add(ribbonV);
+      
+      // Bow - left wing
+      const bowGeometry = new THREE.SphereGeometry(0.12, 16, 16);
+      bowGeometry.scale(1.5, 0.6, 0.8);
+      const bowMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0xff1493, // Deep pink for bow
+        shininess: 40
+      });
+      const bowLeft = new THREE.Mesh(bowGeometry, bowMaterial);
+      bowLeft.position.set(-0.15, 0.25, 0);
+      bowLeft.rotation.z = -0.3;
+      bowLeft.castShadow = true;
+      bowLeft.receiveShadow = true;
+      giftGroup.add(bowLeft);
+      
+      // Bow - right wing
+      const bowRight = new THREE.Mesh(bowGeometry.clone(), bowMaterial);
+      bowRight.position.set(0.15, 0.25, 0);
+      bowRight.rotation.z = 0.3;
+      bowRight.castShadow = true;
+      bowRight.receiveShadow = true;
+      giftGroup.add(bowRight);
+      
+      // Bow center knot
+      const knotGeometry = new THREE.SphereGeometry(0.06, 12, 12);
+      const knot = new THREE.Mesh(knotGeometry, bowMaterial);
+      knot.position.y = 0.25;
+      knot.castShadow = true;
+      knot.receiveShadow = true;
+      giftGroup.add(knot);
+      
+      return giftGroup;
+    }
+
     // Function to create a realistic 3D cherry
     function createCherry() {
       const cherryGroup = new THREE.Group();
@@ -1265,6 +1266,36 @@
     textMaterial.transparent = true;
     textMaterial.opacity = 0.95;
 
+    // Add 4 cute gift boxes on top tier near number "25"
+    const topTierGifts = [];
+    const giftPositions = [
+      { x: -0.8, z: 0.6 },   // Near number "2"
+      { x: 0.8, z: 0.6 },    // Near number "5" 
+      { x: -0.6, z: -0.8 },  // Back left
+      { x: 0.6, z: -0.8 }    // Back right
+    ];
+    
+    for (let i = 0; i < 4; i++) {
+      const gift = createGiftBox();
+      gift.position.x = giftPositions[i].x;
+      gift.position.z = giftPositions[i].z;
+      gift.position.y = 2.25; // A bit higher above top tier surface
+      
+      // Scale for nice visibility
+      gift.scale.set(1.2, 1.2, 1.2);
+      
+      // Add slight random variation for natural look
+      gift.position.x += (Math.random() - 0.5) * 0.1;
+      gift.position.z += (Math.random() - 0.5) * 0.1;
+      gift.position.y += (Math.random() - 0.5) * 0.05;
+      
+      // Random rotation for variety
+      gift.rotation.y = Math.random() * Math.PI * 2;
+      
+      topTierGifts.push(gift);
+      cakeGroup.add(gift);
+    }
+
     // Smooth decorative elements
     const decorations = [];
     for(let i = 0; i < 16; i++) {
@@ -1339,6 +1370,13 @@
       tier1Frosting.forEach((frosting, i) => {
         frosting.position.y = -1.3 + Math.sin(Date.now() * 0.0006 + i * 0.3) * 0.02; // Gentle bobbing
         frosting.rotation.y += 0.0008; // Very slow rotation
+      });
+
+      // Animate top tier gift boxes with individual gentle motions
+      topTierGifts.forEach((gift, i) => {
+        gift.rotation.y += 0.001 + (i * 0.0001); // Slightly different rotation speeds
+        gift.position.y = 2.25 + Math.sin(Date.now() * 0.0007 + i * 0.6) * 0.02; // Gentle up-down motion
+        gift.rotation.z = Math.sin(Date.now() * 0.0009 + i * 0.4) * 0.025; // Gentle swaying
       });
 
       // Shader flame animation for number candles
