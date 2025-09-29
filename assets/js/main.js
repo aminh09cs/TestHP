@@ -1003,14 +1003,14 @@
       return frostingGroup;
     }
 
-    // Function to create a cute 3D gift box with pink ribbon
-    function createGiftBox() {
+    // Function to create a cute 3D gift box with customizable colors
+    function createColoredGiftBox(colors) {
       const giftGroup = new THREE.Group();
       
-      // Gift box body - pink cube
+      // Gift box body - customizable color
       const boxGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
       const boxMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0xffb6c1, // Light pink like the reference image
+        color: colors.box,
         shininess: 20,
         specular: 0x333333
       });
@@ -1022,7 +1022,7 @@
       // Ribbon - horizontal
       const ribbonHGeometry = new THREE.BoxGeometry(0.45, 0.08, 0.45);
       const ribbonMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0xff69b4, // Hot pink for ribbon
+        color: colors.ribbon,
         shininess: 60
       });
       const ribbonH = new THREE.Mesh(ribbonHGeometry, ribbonMaterial);
@@ -1043,7 +1043,7 @@
       const bowGeometry = new THREE.SphereGeometry(0.12, 16, 16);
       bowGeometry.scale(1.5, 0.6, 0.8);
       const bowMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0xff1493, // Deep pink for bow
+        color: colors.bow,
         shininess: 40
       });
       const bowLeft = new THREE.Mesh(bowGeometry, bowMaterial);
@@ -1070,6 +1070,15 @@
       giftGroup.add(knot);
       
       return giftGroup;
+    }
+
+    // Function to create a cute 3D gift box with pink ribbon (legacy function for compatibility)
+    function createGiftBox() {
+      return createColoredGiftBox({ 
+        box: 0xffb6c1, 
+        ribbon: 0xff69b4, 
+        bow: 0xff1493 
+      });
     }
 
     // Function to create a realistic 3D cherry
@@ -1320,8 +1329,16 @@
       { x: 0.6, z: -0.8 }    // Back right
     ];
     
+    // Define cute color palette for gift boxes (UI/UX optimized)
+    const giftColors = [
+      { box: 0xffb6c1, ribbon: 0xff69b4, bow: 0xff1493 }, // Soft pink set
+      { box: 0xfff8dc, ribbon: 0xffd700, bow: 0xffa500 }, // Sunny yellow set  
+      { box: 0xffd1dc, ribbon: 0xffc0cb, bow: 0xff91a4 }, // Pastel pink set
+      { box: 0xe0e6ff, ribbon: 0xb6c1ff, bow: 0x9370db }  // Soft lavender set
+    ];
+    
     for (let i = 0; i < 4; i++) {
-      const gift = createGiftBox();
+      const gift = createColoredGiftBox(giftColors[i]);
       gift.position.x = giftPositions[i].x;
       gift.position.z = giftPositions[i].z;
       gift.position.y = 2.25; // A bit higher above top tier surface
