@@ -1666,10 +1666,18 @@
 
     // Create gift box
     giftBoxGroup = new THREE.Group();
+    
+    // Start with invisible and small for smooth entrance
+    giftBoxGroup.scale.setScalar(0);
+    giftBoxGroup.userData.opacity = 0;
+    
     giftScene.add(giftBoxGroup);
     createGiftBoxBody();
     createGiftBoxLid();
     createThreeJSParticles();
+    
+    // Animate smooth appearance
+    animateGiftBoxAppearance();
 
     // Camera position
     giftCamera.position.set(0, 2, 6);
@@ -1684,6 +1692,52 @@
 
     // Start animation
     animateThreeJSGiftBox();
+  }
+
+  function animateGiftBoxAppearance() {
+    if (!giftBoxGroup) return;
+    
+    const startTime = Date.now();
+    const duration = 800; // 0.8 seconds smooth entrance
+    
+    function animateEntrance() {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Smooth easing curve (ease-out-back)
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const backEase = easeProgress * (1 + 0.3 * Math.sin(easeProgress * Math.PI));
+      
+      // Scale animation with slight overshoot
+      const targetScale = Math.min(backEase * 1.1, 1);
+      giftBoxGroup.scale.setScalar(targetScale);
+      
+      // Opacity animation
+      giftBoxGroup.userData.opacity = easeProgress;
+      
+      // Apply opacity to all materials
+      giftBoxGroup.traverse((child) => {
+        if (child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(mat => {
+              if (mat.transparent !== undefined) {
+                mat.transparent = true;
+                mat.opacity = easeProgress;
+              }
+            });
+          } else {
+            child.material.transparent = true;
+            child.material.opacity = easeProgress;
+          }
+        }
+      });
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateEntrance);
+      }
+    }
+    
+    animateEntrance();
   }
 
   function createGiftBoxBody() {

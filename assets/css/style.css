@@ -80,7 +80,7 @@ body{
 }
 
 /* Stage */
-.stage{ flex:1; display:grid; place-items:center; position:relative; padding-bottom:0; }
+.stage{ display:grid; place-items:center; position:relative; padding-bottom:0; }
 
 /* Balloons */
 .balloons{ position:absolute; inset:auto 0 140px 0; display:flex; gap:18px; justify-content:center; pointer-events:none; z-index:40; }
@@ -125,7 +125,7 @@ body{
 }
 
 /* Controls */
-.controls{ position:fixed; inset:auto 0 0 0; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:14px 16px; }
+.controls{ inset:auto 0 0 0; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:14px 16px; }
 .controls button{ 
   appearance:none; 
   border:none; 
