@@ -125,7 +125,7 @@ body{
 }
 
 /* Controls */
-.controls{ inset:auto 0 0 0; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:14px 16px; }
+.controls{ position:fixed; inset:auto 0 0 0; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:14px 16px; }
 .controls button{ 
   appearance:none; 
   border:none; 
