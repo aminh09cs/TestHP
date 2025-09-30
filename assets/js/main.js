@@ -2111,6 +2111,8 @@
     if (giftBoxOpened || !giftLidGroup) return;
     
     giftBoxOpened = true;
+    // Hide footer hint once user opens the gift
+    hideGiftHintText();
     
     // Play sound
     playGiftBoxSound();
@@ -2271,6 +2273,8 @@
   function showGiftBox() {
     if (giftBoxContainer) {
       giftBoxContainer.classList.add('show');
+      // Show footer hint when the gift box appears
+      showGiftHintText();
       setTimeout(() => initThreeJSGiftBox(), 100);
     }
   }
@@ -2324,6 +2328,21 @@
       openThreeJSGiftBox();
     }
   });
+
+  // Functions for footer hint text
+  function showGiftHintText() {
+    const giftHintText = document.getElementById('giftHintText');
+    if (giftHintText) {
+      giftHintText.classList.add('show');
+    }
+  }
+
+  function hideGiftHintText() {
+    const giftHintText = document.getElementById('giftHintText');
+    if (giftHintText) {
+      giftHintText.classList.remove('show');
+    }
+  }
 
 })();
 

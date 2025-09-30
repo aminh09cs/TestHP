@@ -865,6 +865,59 @@ body{
   }
 }
 
+/* Gift hint text */
+.gift-hint-text {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Nunito', sans-serif;
+  z-index: 1000;
+  display: none;
+  text-align: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.gift-hint-text.show {
+  display: flex;
+}
+
+.hint-text {
+  color: #333;
+  font-size: 16px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  animation: textBounce 1.5s ease-in-out infinite;
+}
+
+.arrow-hint {
+  font-size: 20px;
+  color: #ff6b9d;
+  animation: arrowBlink 1.5s ease-in-out infinite;
+  line-height: 1;
+}
+
+@keyframes arrowBlink {
+  0%, 100% { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+  50% { 
+    opacity: 0.4; 
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes textBounce {
+  0%, 100% { 
+    transform: translateY(0);
+  }
+  50% { 
+    transform: translateY(-3px);
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 520px) {
   .gift-box-container {
@@ -889,6 +942,14 @@ body{
   
   .surprise-hearts .heart {
     font-size: 24px;
+  }
+  
+  .hint-text {
+    font-size: 14px;
+  }
+  
+  .arrow-hint {
+    font-size: 18px;
   }
 }
 
