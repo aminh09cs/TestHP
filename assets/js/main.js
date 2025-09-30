@@ -53,7 +53,7 @@
   let confettiRepeat = false;
 
   const steps = [
-    { label: 'Happy', run: () => { banner.classList.add('show'); } },
+    { label: 'Start', run: () => { banner.classList.add('show'); } },
     { label: 'Balloons', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
     { label: 'Bring cake', run: () => { cake.classList.add('show'); setTimeout(() => cake.classList.add('lit'), 500); } },
     { label: 'Blow candle', run: () => { cake.classList.add('blow'); setTimeout(() => cake.classList.remove('lit'), 50); } },
