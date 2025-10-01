@@ -54,8 +54,8 @@
 
   const steps = [
     { label: 'Start', run: () => { banner.classList.add('show'); } },
-    { label: 'Balloons', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
-    { label: 'Bring cake', run: () => { cake.classList.add('show'); setTimeout(() => cake.classList.add('lit'), 500); } },
+    { label: 'Fly', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
+    { label: 'Get cake', run: () => { cake.classList.add('show'); setTimeout(() => cake.classList.add('lit'), 500); } },
     { label: 'Blow candle', run: () => { cake.classList.add('blow'); setTimeout(() => cake.classList.remove('lit'), 50); } },
     { label: 'Happy Birthday', run: () => { 
       message.classList.add('show'); 
