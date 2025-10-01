@@ -1551,7 +1551,7 @@
   // Update cake show/lit/blow logic to work with 3D cake
   const originalSteps = [
     { label: 'Happy', run: () => { banner.classList.add('show'); } },
-    { label: 'Balloons', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
+    { label: 'Fly', run: () => { spawnBalloons(); balloons.classList.add('fly'); } },
     { label: 'Bring cake', run: () => { 
       cake.classList.add('show'); 
       setTimeout(() => {
